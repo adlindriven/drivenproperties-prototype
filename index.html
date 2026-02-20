@@ -1548,6 +1548,8 @@
         // Header Component
         const Header = ({ onNavigate, watchlistCount, user, onDashboard }) => {
             const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+            const [overflowOpen, setOverflowOpen] = React.useState(false);
+            const [visibleCount, setVisibleCount] = React.useState(8); // 8 = all items; -1 = hamburger only
 
             const navItems = [
                 { label: 'Buy', hasDropdown: true },
@@ -1560,15 +1562,59 @@
                 { label: 'Find Agent', hasDropdown: false },
             ];
 
+            // Priority-plus: minimum core items that must all be visible before jumping to hamburger
+            const MIN_CORE = 4; // Buy, Sell, Rent, Invest
+            const navContainerRef = React.useRef(null);
+            const measureRef = React.useRef(null);
+
+            // Recalculate how many items fit whenever the nav container resizes
+            React.useEffect(() => {
+                const recalculate = () => {
+                    if (!navContainerRef.current || !measureRef.current) return;
+                    const available = navContainerRef.current.offsetWidth;
+                    const children = Array.from(measureRef.current.children);
+                    if (children.length < navItems.length + 1) return;
+                    // Last child in measureRef is the "More" overflow button
+                    const overflowBtnW = children[navItems.length].offsetWidth + 8;
+                    const itemWidths = children.slice(0, navItems.length).map(el => el.offsetWidth + 8);
+                    // First try: do all items fit without an overflow button?
+                    const totalAll = itemWidths.reduce((s, w) => s + w, 0);
+                    if (totalAll <= available) { setVisibleCount(navItems.length); return; }
+                    // Reserve space for overflow button and count how many fit
+                    let used = overflowBtnW, count = 0;
+                    for (let i = 0; i < navItems.length; i++) {
+                        if (used + itemWidths[i] <= available) { used += itemWidths[i]; count = i + 1; } else break;
+                    }
+                    // If fewer than MIN_CORE fit, jump straight to hamburger
+                    setVisibleCount(count < MIN_CORE ? -1 : count);
+                };
+                const ro = new ResizeObserver(recalculate);
+                if (navContainerRef.current) ro.observe(navContainerRef.current);
+                recalculate();
+                return () => ro.disconnect();
+            }, []);
+
+            // Close overflow dropdown when clicking outside
+            React.useEffect(() => {
+                if (!overflowOpen) return;
+                const close = () => setOverflowOpen(false);
+                document.addEventListener('click', close);
+                return () => document.removeEventListener('click', close);
+            }, [overflowOpen]);
+
+            const isHamburgerOnly = visibleCount === -1;
+            const hasOverflow = visibleCount >= 0 && visibleCount < navItems.length;
+            const overflowItems = hasOverflow ? navItems.slice(visibleCount) : [];
+
             return (
                 <>
                     <header className="bg-white sticky top-0 z-50 transition-colors duration-300" style={{ borderBottom: '1px solid rgba(216,206,190,0.32)', boxShadow: '0px 1px 16.6px 0px rgba(199,165,110,0.03)' }}>
                         <div className="px-4 md:px-[80px]">
-                            {/* Three-column layout: logo | nav (absolutely centred) | actions */}
-                            <div className="relative flex items-center justify-between h-[66px]">
+                            {/* Priority-plus nav: logo | flex-1 nav | actions */}
+                            <div className="flex items-center gap-3 h-[66px]">
 
                                 {/* ── LEFT: Logo ── */}
-                                <button onClick={() => onNavigate('search')} className="flex items-center flex-shrink-0 z-10">
+                                <button onClick={() => onNavigate('search')} className="flex items-center flex-shrink-0">
                                     <svg className="h-6" viewBox="0 0 159 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <g clipPath="url(#clip0_1945_142534)">
                                             <path d="M23.3936 5.86722H18.5605V18.138H23.3936C27.2348 18.138 29.899 15.7097 29.899 12.0115C29.899 8.31324 27.2348 5.86722 23.3936 5.86722ZM23.3936 15.8386H21.1704V8.16662H23.3936C25.9111 8.16662 27.2348 9.84148 27.2348 12.0115C27.2348 14.1815 25.8193 15.8386 23.3936 15.8386Z" fill="black" />
@@ -1614,25 +1660,71 @@
                                     </svg>
                                 </button>
 
-                                {/* ── CENTRE: Nav — absolutely centred so it doesn't depend on side column widths ── */}
-                                <nav className="hidden lg:flex items-center gap-[8px] absolute left-1/2 -translate-x-1/2">
-                                    {navItems.map(item => (
+                                {/* ── CENTRE: Priority-plus nav — takes all space between logo and actions ── */}
+                                <nav ref={navContainerRef} className="hidden lg:flex items-center flex-1 min-w-0 overflow-hidden">
+                                    {/* Visible items */}
+                                    {!isHamburgerOnly && navItems.slice(0, visibleCount).map(item => (
                                         <button
                                             key={item.label}
-                                            className="px-[12px] py-[8px] text-[14px] text-[#3a3a3a] hover:bg-gray-50 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap font-medium"
+                                            className="px-[12px] py-[8px] text-[14px] text-[#3a3a3a] hover:bg-gray-50 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap font-medium flex-shrink-0"
                                         >
                                             {item.label}
-                                            {item.hasDropdown && (
-                                                <svg className="w-3 h-3 text-warm-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                                </svg>
-                                            )}
+                                            {item.hasDropdown && <svg className="w-3 h-3 text-warm-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>}
                                         </button>
                                     ))}
+
+                                    {/* ⋯ More — appears when some items overflow */}
+                                    {hasOverflow && (
+                                        <div className="relative flex-shrink-0">
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setOverflowOpen(o => !o); }}
+                                                className="px-[12px] py-[8px] text-[14px] text-[#3a3a3a] hover:bg-gray-50 rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap font-medium"
+                                            >
+                                                More
+                                                <svg className="w-3 h-3 text-warm-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                            </button>
+                                            {overflowOpen && (
+                                                <div className="absolute top-full left-0 mt-1 bg-white rounded-xl shadow-lg border border-warm-100 py-1.5 z-50 min-w-[160px]">
+                                                    {overflowItems.map(item => (
+                                                        <button key={item.label} className="w-full text-left px-4 py-2.5 text-[14px] text-[#3a3a3a] hover:bg-gray-50 font-medium flex items-center justify-between gap-3">
+                                                            {item.label}
+                                                            {item.hasDropdown && <svg className="w-3.5 h-3.5 text-warm-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Hamburger — only when ALL items are too wide for the nav */}
+                                    {isHamburgerOnly && (
+                                        <button onClick={() => setIsMobileMenuOpen(true)} className="p-2 text-warm-800 hover:bg-gray-50 rounded-lg transition-colors">
+                                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+                                        </button>
+                                    )}
                                 </nav>
 
-                                {/* ── RIGHT: Hamburger + Instant Valuation (outline) + Sign In ── */}
-                                <div className="flex items-center gap-2 md:gap-[8px] flex-shrink-0 z-10">
+                                {/* Hidden measurement container — renders all items + overflow btn off-screen to measure widths */}
+                                <div
+                                    ref={measureRef}
+                                    className="fixed flex items-center"
+                                    style={{ top: '-9999px', left: '-9999px', visibility: 'hidden', pointerEvents: 'none' }}
+                                    aria-hidden="true"
+                                >
+                                    {navItems.map(item => (
+                                        <button key={item.label} className="px-[12px] py-[8px] text-[14px] font-medium flex items-center gap-1 whitespace-nowrap flex-shrink-0">
+                                            {item.label}
+                                            {item.hasDropdown && <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>}
+                                        </button>
+                                    ))}
+                                    {/* Overflow button — measured last so we know how much space it needs */}
+                                    <button className="px-[12px] py-[8px] text-[14px] font-medium flex items-center gap-1 whitespace-nowrap flex-shrink-0">
+                                        More <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                    </button>
+                                </div>
+
+                                {/* ── RIGHT: Instant Valuation + Sign In + Mobile hamburger ── */}
+                                <div className="flex items-center gap-2 md:gap-[8px] flex-shrink-0">
 
                                     {/* Instant Valuation — outline style */}
                                     <button className="hidden md:block px-[12px] py-[4px] border border-black text-black rounded-[16px] text-[14px] font-bold hover:bg-gray-50 transition-colors whitespace-nowrap">
@@ -1669,7 +1761,7 @@
 
                     {/* Mobile Bottom Drawer Overlay */}
                     {isMobileMenuOpen && (
-                        <div className="fixed inset-0 z-[100] lg:hidden">
+                        <div className={`fixed inset-0 z-[100]${isHamburgerOnly ? '' : ' lg:hidden'}`}>
                             {/* Backdrop */}
                             <div
                                 className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
