@@ -2256,7 +2256,7 @@
         };
 
         // Search Screen (Home Page)
-        const SearchScreen = ({ onSelectProject, watchlist, onToggleWatchlist, onViewAll }) => {
+        const SearchScreen = ({ onSelectProject, watchlist, onToggleWatchlist, onViewAll, compareList = [], onAddToCompare }) => {
             const [activeTab, setActiveTab] = useState('buy');
             const [buySubTab, setBuySubTab] = useState('offplan'); // 'all', 'ready', 'offplan', 'luxury'
             const [isInvestorMode, setIsInvestorMode] = useState(false);
@@ -2683,7 +2683,7 @@
                             <div className="carousel-track pb-2">
                                 {mockProjects.slice(0, 10).map(project => (
                                     <div key={project.id} className="carousel-property-card flex-shrink-0">
-                                        <PropertyCard project={project} onSelect={onSelectProject} inWatchlist={watchlist.some(w => w.id === project.id)} onToggleWatchlist={onToggleWatchlist} isInvestorMode={isInvestorMode} />
+                                        <PropertyCard project={project} onSelect={onSelectProject} inWatchlist={watchlist.some(w => w.id === project.id)} onToggleWatchlist={onToggleWatchlist} isInvestorMode={isInvestorMode} onAddToCompare={onAddToCompare} inCompareList={compareList.some(c => c.id === project.id)} />
                                     </div>
                                 ))}
                             </div>
@@ -3017,7 +3017,7 @@
             );
         };
         // Detail Screen
-        const DetailScreen = ({ project, onBack, onAddToWatchlist, inWatchlist, user, compareList = [], onAddToCompare, onSelectProject }) => {
+        const DetailScreen = ({ project, onBack, onAddToWatchlist, inWatchlist, user, compareList = [], onAddToCompare, onSelectProject, onViewComparison, onClearCompare }) => {
             const [rentalIncome, setRentalIncome] = useState(120000);
             const [holdingPeriod, setHoldingPeriod] = useState(5);
             const [showImmersive, setShowImmersive] = useState(false);
@@ -3309,8 +3309,16 @@
                                                 <Icon name="layers" className="w-4 h-4" /> 3D Tour
                                             </button>
                                             {/* Icon-only buttons */}
-                                            <button className="w-10 h-10 border border-warm-300 bg-white rounded-full flex items-center justify-center text-warm-500 hover:border-warm-400 hover:text-driven-text transition-all shadow-sm">
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); onAddToCompare && onAddToCompare(project); }}
+                                                className={`w-10 h-10 border rounded-full flex items-center justify-center transition-all shadow-sm ${compareList && compareList.some(c => c.id === project.id) ? 'bg-amber-50 border-accent-gold text-accent-gold' : 'border-warm-300 bg-white text-warm-500 hover:border-warm-400 hover:text-driven-text'}`}
+                                                title={compareList && compareList.some(c => c.id === project.id) ? "Remove from comparison" : "Add to compare"}
+                                            >
+                                                {compareList && compareList.some(c => c.id === project.id) ? (
+                                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                                ) : (
+                                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
+                                                )}
                                             </button>
                                             <button className="w-10 h-10 border border-warm-300 bg-white rounded-full flex items-center justify-center text-warm-500 hover:border-warm-400 hover:text-driven-text transition-all shadow-sm">
                                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13" /></svg>
@@ -4369,15 +4377,10 @@
                                             </p>
                                         </div>
                                         <div className="text-right flex-1 pl-4">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <p className="text-3xl font-bold text-driven-text">
-                                                    <Dhs className="text-2xl text-warm-400 mr-0.5" />
-                                                    {project.price.replace('د.إ', '')}
-                                                </p>
-                                                <button onClick={() => onAddToWatchlist(project)} className={`p-1.5 rounded-lg flex-shrink-0 ${inWatchlist ? 'text-accent-gold' : 'text-warm-300 hover:text-warm-500'}`}>
-                                                    {inWatchlist ? <Icon name="heartFilled" className="w-5 h-5" /> : <Icon name="heart" className="w-5 h-5" />}
-                                                </button>
-                                            </div>
+                                            <p className="text-3xl font-bold text-driven-text">
+                                                <Dhs className="text-2xl text-warm-400 mr-0.5" />
+                                                {project.price.replace('د.إ', '')}
+                                            </p>
                                             <p className="text-warm-500 text-sm">
                                                 <Dhs className="text-xs text-warm-400 mr-0.5" />
                                                 {project.pricePerSqft}/sqft
@@ -4817,35 +4820,65 @@
                             </div>
                         )}
 
-                        {/* ── Mobile Fixed Bottom CTA Bar ── */}
-                        <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white border-t border-warm-200 px-4 py-3" style={{ boxShadow: '0 -2px 16px rgba(0,0,0,0.08)' }}>
-                            <div className="flex items-center gap-2">
-                                {/* Price compact */}
-                                <div className="flex-shrink-0 mr-1">
-                                    <p className="text-[15px] font-bold text-driven-text leading-tight">
-                                        <Dhs className="text-[13px] text-warm-400" />
-                                        {project.price.replace('د.إ', '')}
-                                    </p>
-                                    <p className="text-[10px] text-warm-500 leading-tight">
-                                        <Dhs className="text-[9px] text-warm-400" />
+                        {/* ── Mobile Fixed Bottom CTA Bar + Compare Tray ── */}
+                        <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden flex flex-col" style={{ boxShadow: '0 -4px 20px rgba(0,0,0,0.10)' }}>
+                            {/* CTA section */}
+                            <div className="bg-white border-t border-warm-200 px-5 pt-4 pb-3 flex flex-col gap-3">
+                                {/* Price row — right aligned, clear hierarchy */}
+                                <div className="flex items-end justify-end gap-3">
+                                    <p className="text-[12px] text-warm-400 leading-none pb-[3px]">
+                                        <Dhs className="text-[10px]" />
                                         {Math.round(monthlyPayment).toLocaleString()}/mo*
                                     </p>
+                                    <p className="text-[22px] font-[800] text-driven-text leading-none tracking-tight">
+                                        <Dhs className="text-[17px] text-warm-400 mr-0.5" />
+                                        {project.price.replace('د.إ', '')}
+                                    </p>
                                 </div>
-                                {/* CTA Buttons */}
-                                <button className="flex-1 h-[40px] rounded-full font-semibold flex items-center justify-center gap-1.5 text-[13px] transition-all" style={{ backgroundColor: '#D4B896', color: '#1a1a1a' }}>
-                                    <Icon name="whatsapp" className="w-4 h-4" /> WhatsApp
-                                </button>
-                                <button className="flex-1 h-[40px] rounded-full font-semibold flex items-center justify-center gap-1.5 text-[13px] transition-all" style={{ backgroundColor: '#D4B896', color: '#1a1a1a' }}>
-                                    <Icon name="phone" className="w-4 h-4" /> Call
-                                </button>
-                                <button className="flex-1 h-[40px] rounded-full font-semibold flex items-center justify-center gap-1.5 text-[13px] bg-driven-text text-white transition-all">
-                                    <Icon name="calendar" className="w-4 h-4" /> Visit
-                                </button>
+                                {/* Buttons row — generous spacing */}
+                                <div className="flex items-center gap-2.5">
+                                    <button className="flex-1 h-[44px] rounded-full font-semibold flex items-center justify-center gap-2 text-[13px] transition-all" style={{ backgroundColor: '#D4B896', color: '#1a1a1a' }}>
+                                        <Icon name="whatsapp" className="w-[18px] h-[18px]" /> WhatsApp
+                                    </button>
+                                    <button className="flex-1 h-[44px] rounded-full font-semibold flex items-center justify-center gap-2 text-[13px] transition-all" style={{ backgroundColor: '#D4B896', color: '#1a1a1a' }}>
+                                        <Icon name="phone" className="w-[18px] h-[18px]" /> Call
+                                    </button>
+                                    <button className="flex-1 h-[44px] rounded-full font-semibold flex items-center justify-center gap-2 text-[13px] bg-driven-text text-white transition-all">
+                                        <Icon name="calendar" className="w-[18px] h-[18px]" /> Visit
+                                    </button>
+                                </div>
                             </div>
+
+                            {/* Compare tray — appears below CTA, gold accent border on top */}
+                            {compareList.length > 0 && (
+                                <div className="bg-[#faf6f0] border-t-2 border-accent-gold px-5 py-3 flex items-center justify-between gap-4">
+                                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                                        <div className="w-9 h-9 bg-accent-gold rounded-full flex items-center justify-center flex-shrink-0">
+                                            <span className="text-white font-bold text-[13px]">{compareList.length}</span>
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-[13px] font-bold text-warm-800 truncate leading-tight">
+                                                {compareList.map(p => p.name.split(' ').slice(0, 2).join(' ')).join(', ')}
+                                            </p>
+                                            <p className="text-[11px] text-warm-500 leading-tight mt-0.5">
+                                                {compareList.length === 1 ? 'Add more to compare' : `${compareList.length} properties selected`}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-3 flex-shrink-0">
+                                        <button onClick={onClearCompare} className="text-[12px] text-warm-500 hover:text-warm-700 font-medium">
+                                            Clear
+                                        </button>
+                                        <button onClick={onViewComparison} className="px-5 py-2.5 bg-warm-800 text-white rounded-full text-[12px] font-semibold">
+                                            Compare
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
-                        {/* Bottom spacer for mobile fixed bar */}
-                        <div className="h-[72px] lg:hidden"></div>
+                        {/* Bottom spacer — grows when compare tray is visible */}
+                        <div className="lg:hidden" style={{ height: compareList.length > 0 ? '165px' : '115px' }}></div>
 
                     </div>
                 </div>
@@ -6183,9 +6216,9 @@
                         onDashboard={() => setScreen('dashboard')}
                     />
 
-                    {screen === 'search' && <SearchScreen onSelectProject={selectProject} watchlist={watchlist} onToggleWatchlist={toggleWatchlist} onViewAll={() => setScreen('results')} />}
+                    {screen === 'search' && <SearchScreen onSelectProject={selectProject} watchlist={watchlist} onToggleWatchlist={toggleWatchlist} onViewAll={() => setScreen('results')} compareList={compareList} onAddToCompare={addToCompare} />}
                     {screen === 'results' && <SearchResultsScreen onSelectProject={selectProject} watchlist={watchlist} onToggleWatchlist={toggleWatchlist} onBack={() => { setScreen('search'); window.location.hash = '#home'; }} compareList={compareList} onAddToCompare={addToCompare} />}
-                    {screen === 'detail' && selectedProject && <DetailScreen project={selectedProject} onBack={() => setScreen('search')} onAddToWatchlist={toggleWatchlist} inWatchlist={watchlist.some(p => p.id === selectedProject.id)} user={user} compareList={compareList} onAddToCompare={addToCompare} onSelectProject={selectProject} />}
+                    {screen === 'detail' && selectedProject && <DetailScreen project={selectedProject} onBack={() => setScreen('search')} onAddToWatchlist={toggleWatchlist} inWatchlist={watchlist.some(p => p.id === selectedProject.id)} user={user} compareList={compareList} onAddToCompare={addToCompare} onSelectProject={selectProject} onViewComparison={viewComparison} onClearCompare={clearCompareList} />}
                     {screen === 'dashboard' && user && <UserDashboard user={user} favorites={watchlist} onViewProperty={selectProject} onRemoveFavorite={(p) => setWatchlist(prev => prev.filter(x => x.id !== p.id))} onLogout={handleLogout} />}
                     {screen === 'compare' && <ComparisonScreen compareList={compareList} onBack={() => setScreen('results')} onRemove={removeFromCompare} onViewProperty={selectProject} />}
 
