@@ -211,15 +211,23 @@
         }
 
         @keyframes scale-in {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
+            from { opacity: 0; transform: scale(0.95); }
+            to   { opacity: 1; transform: scale(1); }
+        }
 
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+        @keyframes slideUpDrawer {
+            from { transform: translateY(100%); }
+            to   { transform: translateY(0); }
+        }
+        @keyframes fadeInBackdrop {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        .filter-drawer-backdrop {
+            animation: fadeInBackdrop 0.25s ease-out forwards;
+        }
+        .filter-drawer-sheet {
+            animation: slideUpDrawer 0.32s cubic-bezier(0.32, 0.72, 0, 1) forwards;
         }
 
         .animate-fade-in {
@@ -4840,6 +4848,7 @@
             const [selectedCompletion, setSelectedCompletion] = useState('80%');
             const [locationSearch, setLocationSearch] = useState('');
             const [showQuickPills, setShowQuickPills] = useState(false);
+            const [showFilterDrawer, setShowFilterDrawer] = useState(false); // mobile bottom-sheet
             const [sortBy, setSortBy] = useState('relevance');
             const [showSortDropdown, setShowSortDropdown] = useState(false);
             const [currency, setCurrency] = useState('AED');
@@ -5018,9 +5027,9 @@
                                     </div>
                                 </div>
 
-                                {/* ── More Filters Accordion ── */}
+                                {/* ── More Filters — accordion on desktop, bottom-sheet on mobile ── */}
                                 <button
-                                    onClick={() => setShowQuickPills(!showQuickPills)}
+                                    onClick={() => isDesktop ? setShowQuickPills(!showQuickPills) : setShowFilterDrawer(true)}
                                     className="w-full rounded-[25px] px-[24px] py-[8px] hover:bg-[rgba(0,0,0,0.02)] transition-colors group"
                                 >
                                     <div className="flex items-center gap-[8px]">
@@ -5040,9 +5049,9 @@
                                     </div>
                                 </button>
 
-                                {/* Expanded Advanced Filters Panel */}
+                                {/* Desktop-only: expanded accordion panel */}
                                 <div
-                                    className="overflow-hidden transition-all duration-300"
+                                    className="hidden lg:block overflow-hidden transition-all duration-300"
                                     style={{ maxHeight: showQuickPills ? '500px' : '0', opacity: showQuickPills ? 1 : 0 }}
                                 >
                                     <div className="bg-[rgba(255,255,255,0.8)] border border-[rgba(180,180,180,0.32)] rounded-[24px] p-[24px]">
@@ -5349,6 +5358,125 @@
                             </div>
 
                         </div>
+                    )}
+
+                    {/* ══ Mobile Filter Bottom-Sheet Drawer ══ */}
+                    {showFilterDrawer && (
+                        <>
+                            {/* Backdrop */}
+                            <div
+                                className="filter-drawer-backdrop fixed inset-0 bg-black/40 z-[9998] lg:hidden"
+                                onClick={() => setShowFilterDrawer(false)}
+                            />
+
+                            {/* Sheet */}
+                            <div
+                                className="filter-drawer-sheet fixed bottom-0 left-0 right-0 bg-white z-[9999] lg:hidden flex flex-col"
+                                style={{ borderRadius: '24px 24px 0 0', maxHeight: '88vh' }}
+                            >
+                                {/* Drag handle */}
+                                <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
+                                    <div className="w-10 h-1 bg-[#D8D0C8] rounded-full" />
+                                </div>
+
+                                {/* Header */}
+                                <div className="flex items-center justify-between px-5 py-3 border-b border-[#F0EDE8] flex-shrink-0">
+                                    <h3 className="text-[17px] font-bold text-[#1C1C1A]">More Filters</h3>
+                                    <button
+                                        onClick={() => setShowFilterDrawer(false)}
+                                        className="w-8 h-8 flex items-center justify-center rounded-full bg-[#F5F0EA] text-[#1C1C1A] hover:bg-[#EDE5D8] transition-colors"
+                                    >
+                                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                            <path d="M1 1l12 12M13 1L1 13" stroke="#1C1C1A" strokeWidth="1.8" strokeLinecap="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                {/* Scrollable filter content */}
+                                <div className="overflow-y-auto flex-1 px-5 py-5 flex flex-col gap-6">
+
+                                    {/* Bedrooms */}
+                                    <div>
+                                        <label className="text-[13px] font-semibold text-[#656565] uppercase tracking-wide mb-3 block">Bedrooms</label>
+                                        <div className="flex gap-2 flex-wrap">
+                                            {['Studio', '1', '2', '3', '4', '5+'].map(bed => (
+                                                <button
+                                                    key={bed}
+                                                    onClick={() => setSelectedBedrooms(selectedBedrooms === bed ? null : bed)}
+                                                    className="flex-1 min-w-[48px] py-3 border rounded-xl text-sm font-medium transition-all"
+                                                    style={{
+                                                        background: selectedBedrooms === bed ? '#161717' : '#FFFBF6',
+                                                        borderColor: selectedBedrooms === bed ? '#161717' : '#E7DCCC',
+                                                        color: selectedBedrooms === bed ? '#FAFAF5' : '#1C1C1A',
+                                                    }}
+                                                >{bed}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Bathrooms */}
+                                    <div>
+                                        <label className="text-[13px] font-semibold text-[#656565] uppercase tracking-wide mb-3 block">Bathrooms</label>
+                                        <div className="flex gap-2 flex-wrap">
+                                            {['1', '2', '3', '4', '5+'].map(bath => (
+                                                <button
+                                                    key={bath}
+                                                    onClick={() => setSelectedBathrooms(selectedBathrooms === bath ? null : bath)}
+                                                    className="flex-1 min-w-[48px] py-3 border rounded-xl text-sm font-medium transition-all"
+                                                    style={{
+                                                        background: selectedBathrooms === bath ? '#161717' : '#FFFBF6',
+                                                        borderColor: selectedBathrooms === bath ? '#161717' : '#E7DCCC',
+                                                        color: selectedBathrooms === bath ? '#FAFAF5' : '#1C1C1A',
+                                                    }}
+                                                >{bath}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Property Size */}
+                                    <div>
+                                        <label className="text-[13px] font-semibold text-[#656565] uppercase tracking-wide mb-3 block">Property Size (sqft)</label>
+                                        <div className="flex gap-3 items-center">
+                                            <input
+                                                type="number" placeholder="Min" value={minSize}
+                                                onChange={e => setMinSize(e.target.value)}
+                                                className="flex-1 px-4 py-3 border border-[#E7DCCC] rounded-xl bg-[#FFFBF6] outline-none text-sm focus:border-[#C4AD8D] transition-colors"
+                                            />
+                                            <div className="w-4 h-px bg-[#D0C8BC] flex-shrink-0" />
+                                            <input
+                                                type="number" placeholder="Max" value={maxSize}
+                                                onChange={e => setMaxSize(e.target.value)}
+                                                className="flex-1 px-4 py-3 border border-[#E7DCCC] rounded-xl bg-[#FFFBF6] outline-none text-sm focus:border-[#C4AD8D] transition-colors"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Quick Amenity Pills */}
+                                    <div>
+                                        <label className="text-[13px] font-semibold text-[#656565] uppercase tracking-wide mb-3 block">Amenities</label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {quickPills.map((pill, i) => (
+                                                <button key={i} className="px-4 py-2.5 bg-[#FFFBF6] border border-[#E7DCCC] rounded-full text-sm font-medium text-[#494946] hover:bg-[#EBEBE2] hover:text-[#1C1C1A] transition-all">
+                                                    {pill}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Sticky footer actions */}
+                                <div className="flex-shrink-0 px-5 py-4 border-t border-[#F0EDE8] flex gap-3">
+                                    <button
+                                        onClick={() => { setSelectedBedrooms(null); setSelectedBathrooms(null); setMinSize(''); setMaxSize(''); }}
+                                        className="flex-1 py-3.5 rounded-full border border-[#E7DCCC] text-[#1C1C1A] text-sm font-semibold bg-white hover:bg-[#F5F0EA] transition-colors"
+                                    >Reset</button>
+                                    <button
+                                        onClick={() => setShowFilterDrawer(false)}
+                                        className="flex-2 py-3.5 px-8 rounded-full bg-[#1C1C1A] text-white text-sm font-semibold hover:bg-black transition-colors"
+                                    >Show Results</button>
+                                </div>
+                            </div>
+                        </>
                     )}
                 </div>
             );
