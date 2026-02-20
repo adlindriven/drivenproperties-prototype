@@ -255,6 +255,27 @@
             container-type: inline-size;
         }
 
+        /* Map list panel: always force vertical card layout regardless of container width */
+        .map-list-card .property-card-inner {
+            flex-direction: column !important;
+        }
+        .map-list-card .property-card-inner .card-image-area {
+            width: 100% !important;
+            height: 200px !important;
+            min-height: 200px !important;
+            border-radius: 20px !important;
+        }
+        .map-list-card .property-card-inner .card-image-area img {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .map-list-card .property-card-inner .card-content-area {
+            padding: 8px 4px 4px !important;
+            flex: unset !important;
+        }
+
         /* When card is wide (single-column), switch to horizontal layout */
         @container (min-width: 480px) {
             .property-card-wrap-inner {
@@ -5287,6 +5308,7 @@
                                     {currentProjects.map(project => (
                                         <div
                                             key={project.id}
+                                            className="map-list-card"
                                             onMouseEnter={() => setSelectedMapProject(project)}
                                             onMouseLeave={() => setSelectedMapProject(null)}
                                         >
