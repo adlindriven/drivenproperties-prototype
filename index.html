@@ -2159,6 +2159,8 @@
             // Carousel refs
             const propertiesScrollRef = useRef(null);
             const blogScrollRef = useRef(null);
+            const servicesScrollRef = useRef(null);
+            const [exploreTab, setExploreTab] = useState(0);
             const scrollCarousel = (ref, direction, amount = 320) => {
                 if (ref.current) {
                     ref.current.scrollBy({ left: direction === 'next' ? amount : -amount, behavior: 'smooth' });
@@ -2564,170 +2566,350 @@
                         </div>
                     </div>
 
-                    {/* Properties Carousel Section */}
-                    <div className="max-w-7xl mx-auto px-6 pt-10 pb-12">
-                        {/* Section Header */}
+                    {/* ════════ Popular Properties in Dubai ════════ */}
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 pt-10 pb-4">
                         <div className="flex items-center justify-between mb-6">
-                            <div>
-                                <h2 className="text-2xl font-bold text-driven-text">Popular Off-Plan Investments</h2>
-                                <p className="text-warm-500 mt-1">Data-driven selection for maximum ROI potential</p>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                {/* Prev/Next Buttons */}
-                                <button
-                                    onClick={() => scrollCarousel(propertiesScrollRef, 'prev')}
-                                    className="w-10 h-10 rounded-full border-2 border-warm-300 flex items-center justify-center text-warm-500 hover:border-warm-800 hover:text-driven-text transition-all bg-white shadow-sm"
-                                    aria-label="Previous"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" /></svg>
-                                </button>
-                                <button
-                                    onClick={() => scrollCarousel(propertiesScrollRef, 'next')}
-                                    className="w-10 h-10 rounded-full border-2 border-warm-300 flex items-center justify-center text-warm-500 hover:border-warm-800 hover:text-driven-text transition-all bg-white shadow-sm"
-                                    aria-label="Next"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
-                                </button>
-                                {/* View More Button */}
-                                <button
-                                    onClick={onViewAll}
-                                    className="flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-accent-gold text-accent-gold font-semibold text-sm hover:bg-accent-gold hover:text-white transition-all ml-1"
-                                >
-                                    View More
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
-                                </button>
+                            <h2 className="text-2xl lg:text-[28px] font-bold text-driven-text">Popular Properties in Dubai</h2>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                                <button onClick={() => scrollCarousel(propertiesScrollRef, 'prev')} className="w-10 h-10 rounded-full border border-warm-200 flex items-center justify-center text-driven-text hover:bg-warm-100 transition-all" aria-label="Previous"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" /></svg></button>
+                                <button onClick={() => scrollCarousel(propertiesScrollRef, 'next')} className="w-10 h-10 rounded-full border border-warm-200 flex items-center justify-center text-driven-text hover:bg-warm-100 transition-all" aria-label="Next"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg></button>
+                                <button onClick={onViewAll} className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-warm-200 text-driven-text font-medium text-sm hover:bg-warm-100 transition-all whitespace-nowrap"><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>View More</button>
                             </div>
                         </div>
-                        {/* Carousel */}
-                        <div ref={propertiesScrollRef} className="carousel-container -mx-6 px-6">
+                        <div ref={propertiesScrollRef} className="carousel-container -mx-4 md:-mx-6 px-4 md:px-6">
                             <div className="carousel-track pb-2">
                                 {mockProjects.slice(0, 10).map(project => (
                                     <div key={project.id} className="carousel-property-card flex-shrink-0">
-                                        <PropertyCard
-                                            project={project}
-                                            onSelect={onSelectProject}
-                                            inWatchlist={watchlist.some(w => w.id === project.id)}
-                                            onToggleWatchlist={onToggleWatchlist}
-                                            isInvestorMode={isInvestorMode}
-                                        />
+                                        <PropertyCard project={project} onSelect={onSelectProject} inWatchlist={watchlist.some(w => w.id === project.id)} onToggleWatchlist={onToggleWatchlist} isInvestorMode={isInvestorMode} />
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </div>
-                    {/* Blog Posts Carousel Section */}
-                    <div className="bg-cream-50 py-14">
-                        <div className="max-w-7xl mx-auto px-6">
-                            {/* Section Header */}
-                            <div className="flex items-center justify-between mb-6">
-                                <div>
-                                    <h2 className="text-2xl font-bold text-driven-text">Latest Insights & News</h2>
-                                    <p className="text-warm-500 mt-1">Stay informed with Dubai's real estate market trends</p>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    {/* Prev/Next Buttons */}
-                                    <button
-                                        onClick={() => scrollCarousel(blogScrollRef, 'prev', 360)}
-                                        className="w-10 h-10 rounded-full border-2 border-warm-300 flex items-center justify-center text-warm-500 hover:border-warm-800 hover:text-driven-text transition-all bg-white shadow-sm"
-                                        aria-label="Previous"
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" /></svg>
-                                    </button>
-                                    <button
-                                        onClick={() => scrollCarousel(blogScrollRef, 'next', 360)}
-                                        className="w-10 h-10 rounded-full border-2 border-warm-300 flex items-center justify-center text-warm-500 hover:border-warm-800 hover:text-driven-text transition-all bg-white shadow-sm"
-                                        aria-label="Next"
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
-                                    </button>
-                                    {/* View More Button */}
-                                    <button className="flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-accent-gold text-accent-gold font-semibold text-sm hover:bg-accent-gold hover:text-white transition-all ml-1">
-                                        View More
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
+
+                    {/* ════════ City Comparison Banner ════════ */}
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
+                        <div className="rounded-2xl overflow-hidden flex items-center" style={{ background: '#EDE0CD', minHeight: '190px' }}>
+                            <div className="flex items-center justify-between w-full px-6 md:px-10 py-8 gap-4">
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-[#1c1c1a] text-lg md:text-[22px] font-semibold leading-snug mb-5 max-w-md">
+                                        Find out how Dubai compares to London, New York, and Singapore in our groundbreaking Tier-1 City Index!
+                                    </p>
+                                    <button className="flex items-center gap-2.5 px-5 py-3 bg-[#1c1c1a] text-white rounded-full text-sm font-semibold hover:bg-black transition-colors">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
+                                        Full Rankings & Analysis
                                     </button>
                                 </div>
-                            </div>
-                            {/* Blog Carousel */}
-                            <div ref={blogScrollRef} className="carousel-container -mx-6 px-6">
-                                <div className="carousel-track pb-2">
-                                    {blogPosts.map(post => (
-                                        <div key={post.id} className="carousel-blog-card flex-shrink-0">
-                                            <div className="blog-card border border-warm-200 shadow-sm">
-                                                {/* Blog Image */}
-                                                <div className="blog-image-wrapper">
-                                                    <img src={post.image} alt={post.title} loading="lazy" />
-                                                    {/* Badges */}
-                                                    <div className="absolute top-3 left-3 flex gap-2">
-                                                        <span className="px-2.5 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-bold text-driven-text shadow-sm">
-                                                            {post.category}
-                                                        </span>
-                                                    </div>
-                                                    <div className="absolute top-3 right-3">
-                                                        <span className="px-2.5 py-1 bg-black/50 backdrop-blur-sm rounded-full text-xs font-medium text-white">
-                                                            {post.readTime}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                {/* Blog Content */}
-                                                <div className="p-4 flex-1 flex flex-col">
-                                                    <h3 className="font-bold text-driven-text text-[15px] leading-snug mb-3 line-clamp-2" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                                                        {post.title}
-                                                    </h3>
-                                                    {/* Author Row */}
-                                                    <div className="flex items-center justify-between mt-auto pt-2 border-t border-warm-100">
-                                                        <div className="flex items-center gap-2.5">
-                                                            <img src={post.authorAvatar} alt={post.author} className="w-7 h-7 rounded-full object-cover" />
-                                                            <div>
-                                                                <p className="text-xs font-semibold text-driven-text leading-tight">{post.author}</p>
-                                                                <p className="text-[11px] text-warm-400">{post.date}</p>
-                                                            </div>
-                                                        </div>
-                                                        {/* External Link Arrow */}
-                                                        <button className="w-8 h-8 rounded-full border border-warm-200 flex items-center justify-center text-warm-400 hover:border-accent-gold hover:text-accent-gold transition-all">
-                                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
+                                <div className="hidden md:block flex-shrink-0" style={{ width: '260px', height: '170px' }}>
+                                    <svg viewBox="0 0 260 170" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                                        <defs>
+                                            <linearGradient id="cBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#F9C4A0"/><stop offset="100%" stopColor="#EDE0CD"/></linearGradient>
+                                            <linearGradient id="cB1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#C8462A"/><stop offset="100%" stopColor="#7A1E0A"/></linearGradient>
+                                            <linearGradient id="cB2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#E07040"/><stop offset="100%" stopColor="#A83010"/></linearGradient>
+                                            <linearGradient id="cB3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#EE9060"/><stop offset="100%" stopColor="#C04020"/></linearGradient>
+                                        </defs>
+                                        <rect width="260" height="170" fill="url(#cBg)"/>
+                                        {/* Water reflection */}
+                                        <rect x="0" y="152" width="260" height="18" fill="#C9A07A" opacity="0.35" rx="0"/>
+                                        {/* Far buildings */}
+                                        <rect x="5" y="105" width="14" height="50" fill="url(#cB3)" opacity="0.5" rx="1"/>
+                                        <rect x="22" y="92" width="13" height="63" fill="url(#cB2)" opacity="0.5" rx="1"/>
+                                        {/* Building cluster left */}
+                                        <rect x="38" y="88" width="15" height="67" fill="url(#cB3)" rx="1"/>
+                                        <rect x="36" y="98" width="19" height="57" fill="url(#cB3)" rx="1"/>
+                                        {/* Building cluster center-left */}
+                                        <rect x="62" y="72" width="18" height="83" fill="url(#cB2)" rx="1"/>
+                                        <rect x="60" y="82" width="22" height="73" fill="url(#cB2)" rx="1"/>
+                                        {/* Burj Khalifa - tall center spire */}
+                                        <rect x="121" y="15" width="10" height="140" fill="url(#cB1)" rx="1"/>
+                                        <rect x="118" y="40" width="16" height="115" fill="url(#cB1)" rx="1"/>
+                                        <rect x="114" y="65" width="24" height="90" fill="url(#cB1)" rx="1"/>
+                                        <polygon points="121,5 131,5 126,0" fill="#A03020"/>
+                                        {/* Building right of Burj */}
+                                        <rect x="144" y="62" width="18" height="93" fill="url(#cB2)" rx="1"/>
+                                        <rect x="142" y="78" width="22" height="77" fill="url(#cB2)" rx="1"/>
+                                        {/* Building far right-center */}
+                                        <rect x="172" y="78" width="16" height="77" fill="url(#cB3)" rx="1"/>
+                                        <rect x="170" y="88" width="20" height="67" fill="url(#cB3)" rx="1"/>
+                                        {/* Sail-shaped building (Burj Al Arab) */}
+                                        <path d="M200,155 L200,58 Q213,28 224,58 L224,155 Z" fill="url(#cB2)"/>
+                                        {/* Far right */}
+                                        <rect x="230" y="95" width="14" height="60" fill="url(#cB3)" opacity="0.6" rx="1"/>
+                                        <rect x="246" y="108" width="12" height="47" fill="url(#cB2)" opacity="0.5" rx="1"/>
+                                        {/* Ground */}
+                                        <rect x="0" y="153" width="260" height="4" fill="#B8906A" opacity="0.5"/>
+                                        {/* Subtle window lights */}
+                                        <rect x="123" y="80" width="2" height="2" fill="rgba(255,240,180,0.5)"/>
+                                        <rect x="127" y="80" width="2" height="2" fill="rgba(255,240,180,0.5)"/>
+                                        <rect x="123" y="92" width="2" height="2" fill="rgba(255,240,180,0.5)"/>
+                                        <rect x="127" y="92" width="2" height="2" fill="rgba(255,240,180,0.5)"/>
+                                        <rect x="123" y="104" width="2" height="2" fill="rgba(255,240,180,0.4)"/>
+                                    </svg>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Services Section */}
-                    <div className="py-14">
-                        <div className="max-w-7xl mx-auto px-6">
-                            <div className="flex items-center justify-between mb-8">
-                                <div>
-                                    <h2 className="text-2xl font-bold text-driven-text">Our Services</h2>
-                                    <p className="text-warm-500 mt-1">Comprehensive real estate solutions</p>
-                                </div>
-                                <button className="flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-accent-gold text-accent-gold font-semibold text-sm hover:bg-accent-gold hover:text-white transition-all">
-                                    View More
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
-                                </button>
+                    {/* ════════ Popular Blog Posts ════════ */}
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl lg:text-[28px] font-bold text-driven-text">Read our Popular Blog Posts</h2>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                                <button onClick={() => scrollCarousel(blogScrollRef, 'prev', 360)} className="w-10 h-10 rounded-full border border-warm-200 flex items-center justify-center text-driven-text hover:bg-warm-100 transition-all" aria-label="Previous"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" /></svg></button>
+                                <button onClick={() => scrollCarousel(blogScrollRef, 'next', 360)} className="w-10 h-10 rounded-full border border-warm-200 flex items-center justify-center text-driven-text hover:bg-warm-100 transition-all" aria-label="Next"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg></button>
+                                <button className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-warm-200 text-driven-text font-medium text-sm hover:bg-warm-100 transition-all whitespace-nowrap"><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>View More</button>
                             </div>
-                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {[
-                                    { title: 'Relocation Services', desc: 'Planning a move for a property transaction?', icon: '🏠' },
-                                    { title: 'Instant Property Valuation', desc: 'Get an accurate valuation of your property in minutes.', icon: '📊' },
-                                    { title: 'Property Management', desc: 'Expert management for hassle-free ownership.', icon: '🔑' },
-                                    { title: 'Investment Advisory', desc: 'Data-driven advice for smart property investments.', icon: '💰' }
-                                ].map((service, i) => (
-                                    <div key={i} className="bg-white rounded-2xl p-6 border border-warm-200 shadow-sm hover:border-accent-gold/50 hover:shadow-md transition-all cursor-pointer group">
-                                        <div className="text-3xl mb-4">{service.icon}</div>
-                                        <h3 className="font-bold text-driven-text mb-2">{service.title}</h3>
-                                        <p className="text-sm text-warm-500 mb-4">{service.desc}</p>
-                                        <button className="text-accent-gold text-sm font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
-                                            Learn more <Icon name="arrowRight" className="w-4 h-4" />
-                                        </button>
+                        </div>
+                        <div ref={blogScrollRef} className="carousel-container -mx-4 md:-mx-6 px-4 md:px-6">
+                            <div className="carousel-track pb-2">
+                                {blogPosts.map(post => (
+                                    <div key={post.id} className="carousel-blog-card flex-shrink-0">
+                                        <div className="blog-card border border-warm-200 shadow-sm">
+                                            <div className="blog-image-wrapper">
+                                                <img src={post.image} alt={post.title} loading="lazy" />
+                                                <div className="absolute top-3 left-3"><span className="px-2.5 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-bold text-driven-text shadow-sm">{post.category}</span></div>
+                                                <div className="absolute top-3 right-3"><span className="px-2.5 py-1 bg-black/50 backdrop-blur-sm rounded-full text-xs font-medium text-white">{post.readTime}</span></div>
+                                            </div>
+                                            <div className="p-4 flex-1 flex flex-col">
+                                                <h3 className="font-bold text-driven-text text-[15px] leading-snug mb-3" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{post.title}</h3>
+                                                <div className="flex items-center justify-between mt-auto pt-2 border-t border-warm-100">
+                                                    <div className="flex items-center gap-2.5">
+                                                        <img src={post.authorAvatar} alt={post.author} className="w-7 h-7 rounded-full object-cover" />
+                                                        <div>
+                                                            <p className="text-[10px] text-warm-400 leading-tight">Written by</p>
+                                                            <p className="text-xs font-semibold text-driven-text leading-tight">{post.author}</p>
+                                                        </div>
+                                                    </div>
+                                                    <button className="w-8 h-8 rounded-full border border-warm-200 flex items-center justify-center text-warm-400 hover:border-accent-gold hover:text-accent-gold transition-all">
+                                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </div>
+
+                    {/* ════════ Newsletter Banner ════════ */}
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 pb-6">
+                        <div className="rounded-2xl overflow-hidden" style={{ background: '#EDE0CD' }}>
+                            <div className="flex items-center justify-between px-6 md:px-10 py-10 gap-6">
+                                <div className="flex-1 max-w-[380px]">
+                                    <h2 className="text-xl md:text-[22px] font-bold text-[#1c1c1a] mb-5 leading-snug">Get monthly real estate insights in your inbox</h2>
+                                    <div className="flex flex-col gap-3 mb-4">
+                                        <label className="flex items-start gap-3 cursor-pointer">
+                                            <div className="w-5 h-5 mt-0.5 border-2 border-[#9B8E7E] rounded flex items-center justify-center flex-shrink-0 bg-white/60">
+                                                <svg className="w-3 h-3 text-[#1c1c1a]" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" /></svg>
+                                            </div>
+                                            <span className="text-sm text-[#1c1c1a]">I want to receive the Buy &amp; Sell newsletter</span>
+                                        </label>
+                                        <label className="flex items-start gap-3 cursor-pointer">
+                                            <div className="w-5 h-5 mt-0.5 border-2 border-[#9B8E7E] rounded flex-shrink-0 bg-white/60"></div>
+                                            <span className="text-sm text-[#1c1c1a]">I want to receive the Capital Investment &amp; Developer newsletter</span>
+                                        </label>
+                                    </div>
+                                    <input type="email" placeholder="Enter your email address" className="w-full px-4 py-3 rounded-full border border-[#C4AD8D] bg-white/70 text-sm mb-3 focus:outline-none focus:border-[#9B8E7E]" />
+                                    <button className="w-full py-3.5 bg-[#1c1c1a] text-white rounded-full flex items-center justify-center gap-2.5 font-semibold text-sm hover:bg-black transition-colors">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                                        Subscribe
+                                    </button>
+                                </div>
+                                {/* Envelope illustration */}
+                                <div className="hidden md:flex flex-shrink-0 items-center justify-center" style={{ width: '260px', height: '190px' }}>
+                                    <svg viewBox="0 0 260 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                                        <defs>
+                                            <linearGradient id="stampGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#E8D5B7"/><stop offset="100%" stopColor="#D4B896"/></linearGradient>
+                                        </defs>
+                                        {/* Back stamps scattered */}
+                                        <g transform="rotate(-18 60 130)"><rect x="20" y="95" width="50" height="68" rx="4" fill="#C4A070" opacity="0.5"/><rect x="23" y="98" width="44" height="62" rx="3" fill="url(#stampGrad)" opacity="0.85"/></g>
+                                        <g transform="rotate(14 210 120)"><rect x="192" y="80" width="46" height="64" rx="4" fill="#C4A070" opacity="0.5"/><rect x="195" y="83" width="40" height="58" rx="3" fill="url(#stampGrad)" opacity="0.85"/></g>
+                                        <g transform="rotate(6 185 145)"><rect x="165" y="110" width="42" height="58" rx="4" fill="#B89060" opacity="0.4"/><rect x="168" y="113" width="36" height="52" rx="3" fill="url(#stampGrad)" opacity="0.7"/></g>
+                                        {/* Envelope body */}
+                                        <rect x="48" y="68" width="164" height="112" rx="12" fill="#F6F0E8" stroke="#D0B88A" strokeWidth="1.5"/>
+                                        {/* Envelope V-fold line */}
+                                        <path d="M48 80 L130 128 L212 80" stroke="#D0B88A" strokeWidth="1.2" fill="none"/>
+                                        {/* Bottom fold lines */}
+                                        <path d="M48 180 L90 145" stroke="#D0B88A" strokeWidth="1" opacity="0.5"/>
+                                        <path d="M212 180 L170 145" stroke="#D0B88A" strokeWidth="1" opacity="0.5"/>
+                                        {/* @ card - dark card poking out of envelope */}
+                                        <rect x="88" y="30" width="84" height="96" rx="10" fill="#1c1c1a" />
+                                        <text x="130" y="88" textAnchor="middle" fill="white" fontSize="40" fontWeight="bold" fontFamily="Georgia, serif">@</text>
+                                        {/* Stamp on envelope */}
+                                        <rect x="172" y="78" width="28" height="34" rx="3" fill="#D4B896"/>
+                                        <rect x="175" y="81" width="22" height="28" rx="2" fill="#EDE0CD"/>
+                                        <text x="186" y="99" textAnchor="middle" fill="#8B6040" fontSize="9" fontWeight="bold">AE</text>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Separator */}
+                    <div className="max-w-7xl mx-auto px-4 md:px-6"><div className="border-t border-warm-100" /></div>
+
+                    {/* ════════ Our Services ════════ */}
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 py-10">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl lg:text-[28px] font-bold text-driven-text">Our Services</h2>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                                <button onClick={() => scrollCarousel(servicesScrollRef, 'prev')} className="w-10 h-10 rounded-full border border-warm-200 flex items-center justify-center text-driven-text hover:bg-warm-100 transition-all" aria-label="Previous"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" /></svg></button>
+                                <button onClick={() => scrollCarousel(servicesScrollRef, 'next')} className="w-10 h-10 rounded-full border border-warm-200 flex items-center justify-center text-driven-text hover:bg-warm-100 transition-all" aria-label="Next"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg></button>
+                                <button className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-warm-200 text-driven-text font-medium text-sm hover:bg-warm-100 transition-all whitespace-nowrap"><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>View More</button>
+                            </div>
+                        </div>
+                        <div ref={servicesScrollRef} className="carousel-container -mx-4 md:-mx-6 px-4 md:px-6">
+                            <div className="carousel-track pb-2">
+                                {[
+                                    { title: 'Relocation Services', desc: 'Planning a move for a property transaction? Let PetraMove handle everything for a fixed fee. Our relocation experts ensure a seamless experience, managing every detail from packing to settling in.', cta: 'Get Started', img: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&h=320&fit=crop' },
+                                    { title: 'Instant Property Valuation', desc: 'Planning a move for a property transaction? Let PetraMove handle everything for a fixed fee. Our relocation experts ensure a seamless experience, managing every detail from packing to settling in.', cta: 'Get it Now', img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=320&fit=crop' },
+                                    { title: 'Property Management', desc: 'Planning a move for a property transaction? Let PetraMove handle everything for a fixed fee. Our relocation experts ensure a seamless experience, managing every detail from packing to settling in.', cta: 'Tenant Portal', img: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=320&fit=crop' },
+                                    { title: 'Investment Advisory', desc: 'Planning a move for a property transaction? Let PetraMove handle everything for a fixed fee. Our relocation experts ensure a seamless experience, managing every detail from packing to settling in.', cta: 'Learn More', img: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&h=320&fit=crop' },
+                                    { title: 'Mortgage Consulting', desc: 'Planning a move for a property transaction? Let PetraMove handle everything for a fixed fee. Our relocation experts ensure a seamless experience, managing every detail from packing to settling in.', cta: 'Get Started', img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=320&fit=crop' },
+                                ].map((service, i) => (
+                                    <div key={i} className="flex-shrink-0 bg-white rounded-2xl border border-warm-100 overflow-hidden hover:shadow-md transition-all cursor-pointer flex flex-col" style={{ width: '290px' }}>
+                                        <div className="overflow-hidden rounded-t-2xl" style={{ height: '185px' }}>
+                                            <img src={service.img} alt={service.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" />
+                                        </div>
+                                        <div className="p-5 flex flex-col flex-1">
+                                            <h3 className="font-bold text-driven-text text-[16px] mb-2">{service.title}</h3>
+                                            <p className="text-sm text-warm-500 leading-relaxed mb-3 flex-1" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{service.desc}</p>
+                                            <a href="#" className="text-sm font-medium text-[#1c1c1a] underline underline-offset-2 mb-4 hover:text-accent-gold transition-colors self-start">Read more</a>
+                                            <button className="w-full py-3 rounded-full border border-warm-200 text-driven-text text-sm font-medium hover:bg-warm-50 transition-all">{service.cta}</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Separator */}
+                    <div className="max-w-7xl mx-auto px-4 md:px-6"><div className="border-t border-warm-100" /></div>
+
+                    {/* ════════ Popular Area ════════ */}
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 py-10">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl lg:text-[28px] font-bold text-driven-text">Popular Area</h2>
+                            <div className="flex items-center gap-2 flex-shrink-0">
+                                <button className="w-10 h-10 rounded-full border border-warm-200 flex items-center justify-center text-driven-text hover:bg-warm-100 transition-all" aria-label="Previous"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" /></svg></button>
+                                <button className="w-10 h-10 rounded-full border border-warm-200 flex items-center justify-center text-driven-text hover:bg-warm-100 transition-all" aria-label="Next"><svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg></button>
+                                <button className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-warm-200 text-driven-text font-medium text-sm hover:bg-warm-100 transition-all whitespace-nowrap"><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>View More</button>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            {[
+                                'Dubai Marina', 'Jumeirah Beach Residence', 'Palm Jumeirah', 'Downtown Dubai',
+                                'Business Bay', 'Dubai Design District', 'DIFC', 'Deira',
+                                'Jumeirah', 'Arabian Ranches', 'Dubai Hills Estate', 'City Walk'
+                            ].map((area, i) => (
+                                <button key={i} className="flex items-center justify-between px-4 py-3.5 bg-cream-50 border border-warm-200 rounded-xl hover:bg-warm-100 hover:border-warm-300 transition-all group text-left">
+                                    <span className="text-sm font-medium text-driven-text truncate mr-2">{area}</span>
+                                    <svg className="w-4 h-4 text-warm-400 group-hover:text-driven-text transition-colors flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Separator */}
+                    <div className="max-w-7xl mx-auto px-4 md:px-6"><div className="border-t border-warm-100" /></div>
+
+                    {/* ════════ Explore More ════════ */}
+                    <div className="max-w-7xl mx-auto px-4 md:px-6 py-10">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl lg:text-[28px] font-bold text-driven-text">Explore More</h2>
+                            <button className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-warm-200 text-driven-text font-medium text-sm hover:bg-warm-100 transition-all whitespace-nowrap"><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>View All</button>
+                        </div>
+                        {/* Tabs */}
+                        <div className="flex overflow-x-auto border-b border-warm-200 mb-6" style={{ scrollbarWidth: 'none' }}>
+                            {['Apartments for Sale', 'Properties for Sale', 'Apartments for Rent', 'Properties for Rent', 'Luxury Properties'].map((tab, i) => (
+                                <button key={i} onClick={() => setExploreTab(i)}
+                                    className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-all flex-shrink-0 ${exploreTab === i ? 'border-[#1c1c1a] text-[#1c1c1a]' : 'border-transparent text-warm-500 hover:text-driven-text'}`}>
+                                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+                                    {tab}
+                                </button>
+                            ))}
+                        </div>
+                        {/* 4 link columns */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                            {[
+                                { heading: 'Studio Apartments for sale in Dubai', items: ['Studio Apartments for sale in Dubai', '1 BHK Apartments in Dubai', '2 BHK Apartments in Dubai', '3 BHK Apartments in Dubai', '4 BHK Apartments in Dubai'], readMore: true },
+                                { heading: '1 BHK Apartments in Dubai', items: ['Studio Apartments for sale in Dubai', '1 BHK Apartments in Dubai', '2 BHK Apartments in Dubai', '3 BHK Apartments in Dubai', '4 BHK Apartments in Dubai'], readMore: false },
+                                { heading: '2 BHK Apartments in Dubai', items: ['Studio Apartments for sale in Dubai', '1 BHK Apartments in Dubai', '2 BHK Apartments in Dubai', '3 BHK Apartments in Dubai', '4 BHK Apartments in Dubai'], readMore: true },
+                                { heading: 'Luxury Studio Apartments in Dubai', items: ['Studio Apartments for sale in Dubai', '1 BHK Apartments in Dubai', '2 BHK Apartments in Dubai', '3 BHK Apartments in Dubai', '4 BHK Apartments in Dubai'], readMore: false },
+                            ].map((col, i) => (
+                                <div key={i}>
+                                    <h3 className="font-bold text-driven-text text-sm mb-3 leading-snug">{col.heading}</h3>
+                                    <div className="flex flex-col gap-2">
+                                        {col.items.map((item, j) => (
+                                            <a key={j} href="#" className="text-xs text-warm-500 hover:text-driven-text transition-colors leading-snug">{item}</a>
+                                        ))}
+                                        {col.readMore && <a href="#" className="text-xs font-semibold text-driven-text underline underline-offset-2 mt-1">Read more</a>}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* ════════ Speak with us today ════════ */}
+                    <div className="relative overflow-hidden" style={{ minHeight: '420px' }}>
+                        <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1600&h=700&fit=crop" alt="Luxury Interior" className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.48) 55%, rgba(0,0,0,0.18) 100%)' }} />
+                        <div className="relative flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 px-8 md:px-14 lg:px-20 py-14" style={{ minHeight: '420px' }}>
+                            <div className="flex flex-col justify-center">
+                                <h2 className="text-3xl md:text-4xl lg:text-[42px] font-bold text-white leading-tight">Speak with us today</h2>
+                                <p className="text-white/55 mt-2 text-base">Please let us know how we can help</p>
+                            </div>
+                            <div className="w-full lg:w-[390px] flex-shrink-0">
+                                <div className="bg-white/96 backdrop-blur-sm rounded-2xl p-6 shadow-2xl">
+                                    <h3 className="text-lg font-bold text-[#1c1c1a] mb-5">Get a call back</h3>
+                                    <div className="grid grid-cols-2 gap-3 mb-3">
+                                        <div>
+                                            <label className="text-xs font-medium text-warm-500 mb-1.5 block">First Name</label>
+                                            <input type="text" placeholder="John" className="w-full px-3.5 py-3 rounded-xl border border-warm-200 text-sm focus:outline-none focus:border-warm-400 bg-[#FAFAF5]" />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-medium text-warm-500 mb-1.5 block">Last Name</label>
+                                            <input type="text" placeholder="Dio" className="w-full px-3.5 py-3 rounded-xl border border-warm-200 text-sm focus:outline-none focus:border-warm-400 bg-[#FAFAF5]" />
+                                        </div>
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="text-xs font-medium text-warm-500 mb-1.5 block">Phone</label>
+                                        <div className="flex gap-2">
+                                            <div className="flex items-center gap-1.5 px-3 py-3 rounded-xl border border-warm-200 bg-[#FAFAF5] text-sm cursor-pointer flex-shrink-0">
+                                                <span className="text-base leading-none">🇦🇪</span>
+                                                <span className="text-driven-text font-medium text-sm">+971</span>
+                                                <svg className="w-3 h-3 text-warm-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" /></svg>
+                                            </div>
+                                            <input type="tel" placeholder="516156566" className="flex-1 min-w-0 px-3.5 py-3 rounded-xl border border-warm-200 text-sm focus:outline-none focus:border-warm-400 bg-[#FAFAF5]" />
+                                        </div>
+                                    </div>
+                                    <div className="mb-5">
+                                        <label className="text-xs font-medium text-warm-500 mb-1.5 block">Email ID</label>
+                                        <input type="email" placeholder="John@gmail.com" className="w-full px-3.5 py-3 rounded-xl border border-warm-200 text-sm focus:outline-none focus:border-warm-400 bg-[#FAFAF5]" />
+                                    </div>
+                                    <button className="w-full py-3.5 bg-[#1c1c1a] text-white rounded-xl font-semibold text-sm hover:bg-black transition-colors">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ════════ Footer ════════ */}
+                    <footer className="bg-[#1c1c1a]">
+                        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-3">
+                            <div className="flex items-center gap-1.5 flex-shrink-0">
+                                <span className="text-white font-bold text-base tracking-widest uppercase">DRIVEN</span>
+                                <span className="text-white/40 text-[9px] tracking-[0.18em] uppercase self-end mb-0.5">Properties</span>
+                            </div>
+                            <div className="flex items-center flex-wrap justify-center gap-x-5 gap-y-1.5">
+                                <span className="text-white/35 text-xs">© 2023 Driven Properties. All Rights Reserved.</span>
+                                <a href="#" className="text-white/55 hover:text-white transition-colors text-xs">About Us</a>
+                                <a href="#" className="text-white/55 hover:text-white transition-colors text-xs">Careers</a>
+                                <a href="#" className="text-white/55 hover:text-white transition-colors text-xs">Privacy Policy</a>
+                                <a href="#" className="flex items-center gap-1 text-white/55 hover:text-white transition-colors text-xs">Other <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg></a>
+                            </div>
+                        </div>
+                    </footer>
                 </div>
             );
         };
