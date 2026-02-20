@@ -2293,11 +2293,13 @@
                                 {/* ── Hero Search Box — Figma Make Design ── */}
                                 <div className="w-full flex justify-center px-0 md:px-4 lg:px-8">
                                     <div className="bg-[rgba(255,255,255,0.1)] p-[8px] rounded-[44px] w-full max-w-4xl shadow-2xl">
-                                        <div className="backdrop-blur-[8.5px] bg-[rgba(248,247,244,0.9)] rounded-[40px] w-full overflow-hidden">
+                                        {/* min-height matches the manual search 3-row height so toggling never shifts layout */}
+                                        <div className="backdrop-blur-[8.5px] bg-[rgba(248,247,244,0.9)] rounded-[40px] w-full overflow-hidden flex flex-col" style={{ minHeight: '198px' }}>
                                             {isAiMode ? (
-                                                // AI Interface — warm theme
-                                                <div className="p-6 flex flex-col gap-4">
-                                                    <div className="flex items-center gap-3 flex-wrap">
+                                                // AI Interface — flex-1 so it always fills the shared min-height
+                                                <div className="p-6 flex flex-col gap-4 flex-1">
+                                                    {/* Header row — fixed height */}
+                                                    <div className="flex items-center gap-3 flex-wrap flex-shrink-0">
                                                         <div className="w-9 h-9 rounded-full bg-[#e7dccc]/40 flex items-center justify-center flex-shrink-0">
                                                             <Icon name="star" className="w-5 h-5 text-[#6C5F4C]" />
                                                         </div>
@@ -2311,11 +2313,11 @@
                                                             ))}
                                                         </div>
                                                     </div>
-                                                    <div className="relative">
+                                                    {/* Textarea — flex-1 so it expands to fill remaining space */}
+                                                    <div className="relative flex-1" style={{ minHeight: '80px' }}>
                                                         <textarea
                                                             aria-label="AI search query"
-                                                            className="w-full p-4 pr-14 bg-[#fffbf6] border border-[#e7dccc] rounded-2xl text-[#1c1c1a] placeholder-[rgba(0,0,0,0.4)] resize-none text-sm focus:outline-none focus:border-[#c4ad8d] transition-colors"
-                                                            style={{ minHeight: '90px' }}
+                                                            className="absolute inset-0 w-full h-full p-4 pr-14 bg-[#fffbf6] border border-[#e7dccc] rounded-2xl text-[#1c1c1a] placeholder-[rgba(0,0,0,0.4)] resize-none text-sm focus:outline-none focus:border-[#c4ad8d] transition-colors"
                                                             placeholder="Try: 'Find me a 2-bedroom apartment in Dubai Marina under 2M AED with high ROI and payment plan...'"
                                                         ></textarea>
                                                         <div className="absolute bottom-3 right-3">
