@@ -261,9 +261,9 @@
         }
         .map-list-card .property-card-inner .card-image-area {
             width: 100% !important;
-            height: 200px !important;
-            min-height: 200px !important;
-            border-radius: 20px !important;
+            height: 150px !important;
+            min-height: 150px !important;
+            border-radius: 14px !important;
         }
         .map-list-card .property-card-inner .card-image-area img {
             position: absolute !important;
@@ -272,8 +272,12 @@
             height: 100% !important;
         }
         .map-list-card .property-card-inner .card-content-area {
-            padding: 8px 4px 4px !important;
+            padding: 6px 2px 2px !important;
             flex: unset !important;
+        }
+        .map-list-card .property-card-wrap-inner {
+            padding: 8px !important;
+            border-radius: 20px !important;
         }
 
         /* When card is wide (single-column), switch to horizontal layout */
@@ -5303,8 +5307,8 @@
                                     <p className="text-sm font-semibold text-[#222]">{mockProjects.length} properties</p>
                                 </div>
 
-                                {/* Original PropertyCard — with hover sync for map marker highlighting */}
-                                <div className="p-4 flex flex-col gap-4">
+                                {/* 2-column grid of PropertyCards with hover sync */}
+                                <div className="p-3 grid grid-cols-2 gap-3">
                                     {currentProjects.map(project => (
                                         <div
                                             key={project.id}
