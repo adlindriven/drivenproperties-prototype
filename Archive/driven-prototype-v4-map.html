@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driven Properties - Airbnb-Style Map View</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        oak: { 0: '#fffbf6', 50: '#f8f3ec', 100: '#f1ebe1', 200: '#e1c8a4', 300: '#c4ad8d', 400: '#a49075', 500: '#887860', 600: '#6c5f4c', 800: '#373025', 950: '#12100d' },
+                        eggshell: { 100: '#ebebe2', 200: '#cfcfc7', 300: '#b1b1ab', 500: '#7c7c78' },
+                        driven: { dark: '#1c1c1a', text: '#1c1c1a', muted: '#7c7c78', border: '#ebebe2', card: '#ffffff', highlight: '#f8f7f4', button: '#161717', green: '#1a472a' }
+                    },
+                    fontFamily: { lato: ['Lato', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Lato', sans-serif; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .price-pin { transition: all 0.15s ease; }
+        .price-pin:hover, .price-pin.active { transform: scale(1.08); z-index: 100 !important; }
+        .price-pin.active { background: #1c1c1a !important; color: white !important; }
+        .property-card { transition: all 0.2s ease; }
+        .property-card:hover, .property-card.highlighted { box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+        .property-card.highlighted { border-color: #1c1c1a; }
+        .map-popup { animation: popupIn 0.2s ease; }
+        @keyframes popupIn { from { opacity: 0; transform: translateY(8px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .toggle-switch { transition: background 0.2s ease; }
+        .toggle-switch.active { background: #1c1c1a; }
+        .toggle-switch .toggle-dot { transition: transform 0.2s ease; }
+        .toggle-switch.active .toggle-dot { transform: translateX(16px); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Icons
+        const Icon = ({ name, className = "w-5 h-5" }) => {
+            const icons = {
+                search: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>,
+                heart: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>,
+                heartFilled: <svg className={className} fill="currentColor" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>,
+                mapPin: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>,
+                chevronLeft: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>,
+                chevronRight: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>,
+                x: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+                filter: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>,
+                list: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>,
+                map: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>,
+                layers: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>,
+                play: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>,
+                star: <svg className={className} fill="currentColor" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>,
+                bed: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/></svg>,
+                bath: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M9 6 6.5 9h11L15 6M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7M2 12h20"/></svg>,
+                area: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>,
+                verified: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>,
+                zoomIn: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>,
+                zoomOut: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>,
+                locate: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>,
+                user: <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+            };
+            return icons[name] || null;
+        };
+
+        // Mock Data with map coordinates
+        const mockProjects = [
+            { id: 1, name: "Emaar Beachfront Vista", location: "Dubai Harbour", price: "1.85M", priceNum: 1850000, roi: "8.2%", beds: 2, baths: 2, sqft: "1,825", image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=300&fit=crop", lat: 25.08, lng: 55.14, verified: true, rating: 4.9, reviews: 24, has3D: true, viewed: false },
+            { id: 2, name: "Sobha One Tower", location: "Sobha Hartland", price: "2.4M", priceNum: 2400000, roi: "7.8%", beds: 3, baths: 3, sqft: "2,200", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop", lat: 25.19, lng: 55.28, verified: true, rating: 4.7, reviews: 18, has3D: true, viewed: true },
+            { id: 3, name: "DAMAC Lagoons Villa", location: "DAMAC Lagoons", price: "3.1M", priceNum: 3100000, roi: "9.1%", beds: 4, baths: 5, sqft: "3,500", image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop", lat: 25.05, lng: 55.22, verified: true, rating: 4.8, reviews: 32, has3D: true, viewed: false },
+            { id: 4, name: "Creek Views Heights", location: "Dubai Creek", price: "2.8M", priceNum: 2800000, roi: "7.5%", beds: 3, baths: 4, sqft: "2,100", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400&h=300&fit=crop", lat: 25.21, lng: 55.34, verified: true, rating: 4.6, reviews: 15, has3D: false, viewed: false },
+            { id: 5, name: "Marina Gate Residence", location: "Dubai Marina", price: "4.2M", priceNum: 4200000, roi: "6.8%", beds: 4, baths: 4, sqft: "3,200", image: "https://images.unsplash.com/photo-1567684014761-b65e2e59b9eb?w=400&h=300&fit=crop", lat: 25.08, lng: 55.13, verified: true, rating: 4.9, reviews: 42, has3D: true, viewed: true },
+            { id: 6, name: "Palm Jumeirah Villa", location: "Palm Jumeirah", price: "8.5M", priceNum: 8500000, roi: "5.2%", beds: 5, baths: 6, sqft: "5,800", image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400&h=300&fit=crop", lat: 25.11, lng: 55.12, verified: true, rating: 5.0, reviews: 56, has3D: true, viewed: false },
+            { id: 7, name: "Downtown Views II", location: "Downtown Dubai", price: "3.5M", priceNum: 3500000, roi: "7.2%", beds: 3, baths: 3, sqft: "2,400", image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=400&h=300&fit=crop", lat: 25.19, lng: 55.27, verified: true, rating: 4.8, reviews: 28, has3D: true, viewed: false },
+            { id: 8, name: "JVC Smart Tower", location: "JVC", price: "950K", priceNum: 950000, roi: "9.5%", beds: 1, baths: 1, sqft: "750", image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop", lat: 25.06, lng: 55.21, verified: false, rating: 4.5, reviews: 12, has3D: false, viewed: true },
+        ];
+
+        // Header
+        const Header = ({ onShowList }) => (
+            <header className="bg-white border-b border-eggshell-100 sticky top-0 z-50">
+                <div className="px-6 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                        <span className="text-xl font-black text-driven-text">DRIVEN</span>
+                        <div className="hidden md:flex items-center bg-white border border-eggshell-100 rounded-full shadow-sm">
+                            <button className="px-4 py-2 text-sm font-medium text-driven-text border-r border-eggshell-100">Location</button>
+                            <button className="px-4 py-2 text-sm text-eggshell-500 border-r border-eggshell-100">Price</button>
+                            <button className="px-4 py-2 text-sm text-eggshell-500 border-r border-eggshell-100">Type</button>
+                            <button className="p-2 bg-driven-button text-white rounded-full m-1"><Icon name="search" className="w-4 h-4" /></button>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <button className="px-4 py-2 text-sm font-medium text-driven-text hover:bg-oak-50 rounded-full">Become an Investor</button>
+                        <button className="p-2 hover:bg-oak-50 rounded-full"><Icon name="user" className="w-5 h-5 text-driven-text" /></button>
+                    </div>
+                </div>
+            </header>
+        );
+
+        // Filters Bar
+        const FiltersBar = ({ totalResults, sortBy, setSortBy }) => (
+            <div className="px-6 py-4 border-b border-eggshell-100 bg-white">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar">
+                        <button className="flex items-center gap-2 px-4 py-2 border border-eggshell-100 rounded-full text-sm font-medium text-driven-text hover:border-driven-text whitespace-nowrap">
+                            <Icon name="filter" className="w-4 h-4" /> Filters
+                        </button>
+                        {['Price', 'ROI 8%+', 'Beds', 'Property Type', 'Ready 2026', 'Verified'].map(f => (
+                            <button key={f} className="px-4 py-2 border border-eggshell-100 rounded-full text-sm text-eggshell-500 hover:border-driven-text hover:text-driven-text whitespace-nowrap">{f}</button>
+                        ))}
+                    </div>
+                    <div className="flex items-center gap-4 ml-4">
+                        <span className="text-sm text-eggshell-500 whitespace-nowrap">{totalResults} properties</span>
+                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="text-sm border border-eggshell-100 rounded-lg px-3 py-2 focus:outline-none focus:border-driven-text">
+                            <option value="roi">Highest ROI</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="newest">Newest</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // Property Card (List View - Compact for split view)
+        const PropertyCard = ({ property, isHighlighted, onHover, onSelect, inWatchlist, onToggleWatchlist }) => (
+            <div
+                className={`property-card bg-white rounded-2xl overflow-hidden cursor-pointer border ${isHighlighted ? 'border-driven-text highlighted' : 'border-eggshell-100'} ${property.viewed ? 'opacity-75' : ''}`}
+                onMouseEnter={() => onHover(property.id)}
+                onMouseLeave={() => onHover(null)}
+                onClick={() => onSelect(property)}
+            >
+                <div className="flex">
+                    {/* Image */}
+                    <div className="relative w-[280px] h-[200px] flex-shrink-0">
+                        <img src={property.image} alt={property.name} className="w-full h-full object-cover" />
+                        <button
+                            onClick={(e) => { e.stopPropagation(); onToggleWatchlist(property); }}
+                            className="absolute top-3 right-3 p-2 bg-white/90 rounded-full hover:bg-white hover:scale-110 transition-all"
+                        >
+                            {inWatchlist ? <Icon name="heartFilled" className="w-5 h-5 text-red-500" /> : <Icon name="heart" className="w-5 h-5 text-driven-text" />}
+                        </button>
+                        {property.viewed && (
+                            <div className="absolute bottom-3 left-3 bg-white/90 px-2 py-1 rounded text-xs text-eggshell-500">Viewed</div>
+                        )}
+                        {property.has3D && (
+                            <div className="absolute bottom-3 right-3 flex gap-1">
+                                <span className="bg-white/90 px-2 py-1 rounded text-xs flex items-center gap-1"><Icon name="layers" className="w-3 h-3" /> 3D</span>
+                            </div>
+                        )}
+                        {/* Image dots */}
+                        <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1">
+                            {[1,2,3,4,5].map(i => <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === 1 ? 'bg-white' : 'bg-white/50'}`}></div>)}
+                        </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 p-4 flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="font-bold text-driven-text">{property.name}</h3>
+                                        {property.verified && <Icon name="verified" className="w-4 h-4 text-oak-500" />}
+                                    </div>
+                                    <p className="text-sm text-eggshell-500 mt-0.5">{property.location}</p>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <Icon name="star" className="w-4 h-4 text-driven-text" />
+                                    <span className="text-sm font-medium text-driven-text">{property.rating}</span>
+                                    <span className="text-sm text-eggshell-500">({property.reviews})</span>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 mt-3 text-sm text-eggshell-500">
+                                <span className="flex items-center gap-1"><Icon name="bed" className="w-4 h-4" /> {property.beds} beds</span>
+                                <span className="flex items-center gap-1"><Icon name="bath" className="w-4 h-4" /> {property.baths} baths</span>
+                                <span className="flex items-center gap-1"><Icon name="area" className="w-4 h-4" /> {property.sqft} sqft</span>
+                            </div>
+                        </div>
+
+                        <div className="flex items-end justify-between mt-4">
+                            <div>
+                                <span className="text-lg font-bold text-driven-text">AED {property.price}</span>
+                                <span className="text-sm text-eggshell-500 ml-2">starting</span>
+                            </div>
+                            <div className="text-right">
+                                <span className="text-lg font-bold text-oak-600">{property.roi}</span>
+                                <p className="text-xs text-eggshell-500">Expected ROI</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // Price Pin Component (Airbnb Style)
+        const PricePin = ({ property, isActive, isHovered, onClick, onHover }) => {
+            const mapWidth = 100; // percentage
+            const mapHeight = 100;
+            // Convert lat/lng to position (simplified for demo)
+            const x = ((property.lng - 55.10) / 0.30) * mapWidth;
+            const y = ((25.25 - property.lat) / 0.25) * mapHeight;
+
+            return (
+                <button
+                    className={`price-pin absolute px-3 py-1.5 rounded-full font-semibold text-sm whitespace-nowrap shadow-md border-2 ${
+                        isActive || isHovered
+                            ? 'bg-driven-text text-white border-driven-text active'
+                            : property.viewed
+                                ? 'bg-eggshell-100 text-eggshell-500 border-eggshell-100'
+                                : 'bg-white text-driven-text border-white hover:border-driven-text'
+                    }`}
+                    style={{ left: `${Math.max(5, Math.min(85, x))}%`, top: `${Math.max(5, Math.min(85, y))}%`, zIndex: isActive || isHovered ? 100 : 10 }}
+                    onClick={() => onClick(property)}
+                    onMouseEnter={() => onHover(property.id)}
+                    onMouseLeave={() => onHover(null)}
+                >
+                    AED {property.price}
+                </button>
+            );
+        };
+
+        // Map Popup Card (Airbnb Style)
+        const MapPopup = ({ property, onClose, onSelect, inWatchlist, onToggleWatchlist }) => (
+            <div className="map-popup absolute bg-white rounded-2xl shadow-xl overflow-hidden w-[320px] border border-eggshell-100" style={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+                <button onClick={onClose} className="absolute top-3 left-3 z-10 p-1.5 bg-white/90 rounded-full hover:bg-white">
+                    <Icon name="x" className="w-4 h-4 text-driven-text" />
+                </button>
+                <button onClick={(e) => { e.stopPropagation(); onToggleWatchlist(property); }} className="absolute top-3 right-3 z-10 p-1.5 bg-white/90 rounded-full hover:bg-white">
+                    {inWatchlist ? <Icon name="heartFilled" className="w-5 h-5 text-red-500" /> : <Icon name="heart" className="w-5 h-5 text-driven-text" />}
+                </button>
+
+                <div className="relative h-[180px]">
+                    <img src={property.image} alt={property.name} className="w-full h-full object-cover" />
+                    <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1">
+                        {[1,2,3,4,5].map(i => <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === 1 ? 'bg-white' : 'bg-white/50'}`}></div>)}
+                    </div>
+                </div>
+
+                <div className="p-4 cursor-pointer" onClick={() => onSelect(property)}>
+                    <div className="flex items-start justify-between">
+                        <div>
+                            <div className="flex items-center gap-1">
+                                <h3 className="font-bold text-driven-text">{property.name}</h3>
+                                {property.verified && <Icon name="verified" className="w-4 h-4 text-oak-500" />}
+                            </div>
+                            <p className="text-sm text-eggshell-500">{property.location}</p>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <Icon name="star" className="w-4 h-4 text-driven-text" />
+                            <span className="text-sm font-medium">{property.rating}</span>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 mt-2 text-sm text-eggshell-500">
+                        <span>{property.beds} beds</span>
+                        <span>·</span>
+                        <span>{property.baths} baths</span>
+                        <span>·</span>
+                        <span>{property.sqft} sqft</span>
+                    </div>
+
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-eggshell-100">
+                        <div>
+                            <span className="text-lg font-bold text-driven-text">AED {property.price}</span>
+                        </div>
+                        <div className="bg-oak-50 px-3 py-1 rounded-full">
+                            <span className="font-bold text-oak-600">{property.roi}</span>
+                            <span className="text-xs text-oak-500 ml-1">ROI</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // Map Component (Airbnb Style)
+        const MapView = ({ properties, hoveredId, setHoveredId, selectedProperty, setSelectedProperty, watchlist, onToggleWatchlist, searchAsMove, setSearchAsMove, onSelect }) => (
+            <div className="relative w-full h-full bg-oak-0 overflow-hidden">
+                {/* Map Background */}
+                <div className="absolute inset-0">
+                    {/* Simulated map with roads and water */}
+                    <svg className="w-full h-full">
+                        <defs>
+                            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#e8e8e0" strokeWidth="0.5"/>
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="#f5f5f0"/>
+                        <rect width="100%" height="100%" fill="url(#grid)" />
+
+                        {/* Water */}
+                        <ellipse cx="20%" cy="80%" rx="25%" ry="30%" fill="#d4e5f7" opacity="0.5"/>
+                        <ellipse cx="85%" cy="30%" rx="20%" ry="35%" fill="#d4e5f7" opacity="0.5"/>
+
+                        {/* Roads */}
+                        <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#fff" strokeWidth="8"/>
+                        <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#fff" strokeWidth="8"/>
+                        <line x1="20%" y1="0" x2="80%" y2="100%" stroke="#fff" strokeWidth="4"/>
+                        <line x1="0" y1="30%" x2="60%" y2="70%" stroke="#fff" strokeWidth="4"/>
+
+                        {/* Area Labels */}
+                        <text x="15%" y="35%" fill="#b1b1ab" fontSize="11" fontWeight="500">Dubai Marina</text>
+                        <text x="55%" y="25%" fill="#b1b1ab" fontSize="11" fontWeight="500">Downtown Dubai</text>
+                        <text x="35%" y="70%" fill="#b1b1ab" fontSize="11" fontWeight="500">DAMAC Lagoons</text>
+                        <text x="70%" y="55%" fill="#b1b1ab" fontSize="11" fontWeight="500">Creek Harbour</text>
+                        <text x="25%" y="50%" fill="#b1b1ab" fontSize="11" fontWeight="500">Palm Jumeirah</text>
+                    </svg>
+                </div>
+
+                {/* Price Pins */}
+                {properties.map(p => (
+                    <PricePin
+                        key={p.id}
+                        property={p}
+                        isActive={selectedProperty?.id === p.id}
+                        isHovered={hoveredId === p.id}
+                        onClick={setSelectedProperty}
+                        onHover={setHoveredId}
+                    />
+                ))}
+
+                {/* Map Controls */}
+                <div className="absolute bottom-6 right-6 flex flex-col gap-2">
+                    <button className="p-3 bg-white rounded-xl shadow-md hover:shadow-lg border border-eggshell-100">
+                        <Icon name="zoomIn" className="w-5 h-5 text-driven-text" />
+                    </button>
+                    <button className="p-3 bg-white rounded-xl shadow-md hover:shadow-lg border border-eggshell-100">
+                        <Icon name="zoomOut" className="w-5 h-5 text-driven-text" />
+                    </button>
+                    <button className="p-3 bg-white rounded-xl shadow-md hover:shadow-lg border border-eggshell-100">
+                        <Icon name="locate" className="w-5 h-5 text-driven-text" />
+                    </button>
+                </div>
+
+                {/* Search as I move toggle */}
+                <div className="absolute bottom-6 left-6 bg-white rounded-full shadow-md px-4 py-2 flex items-center gap-3 border border-eggshell-100">
+                    <span className="text-sm text-driven-text">Search as I move the map</span>
+                    <button
+                        onClick={() => setSearchAsMove(!searchAsMove)}
+                        className={`toggle-switch w-10 h-6 rounded-full p-1 ${searchAsMove ? 'active' : 'bg-eggshell-100'}`}
+                    >
+                        <div className="toggle-dot w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                    </button>
+                </div>
+
+                {/* Selected Property Popup */}
+                {selectedProperty && (
+                    <MapPopup
+                        property={selectedProperty}
+                        onClose={() => setSelectedProperty(null)}
+                        onSelect={onSelect}
+                        inWatchlist={watchlist.some(w => w.id === selectedProperty.id)}
+                        onToggleWatchlist={onToggleWatchlist}
+                    />
+                )}
+            </div>
+        );
+
+        // Main Split View Component
+        const SplitMapView = ({ onSelectProperty }) => {
+            const [hoveredId, setHoveredId] = useState(null);
+            const [selectedProperty, setSelectedProperty] = useState(null);
+            const [searchAsMove, setSearchAsMove] = useState(true);
+            const [sortBy, setSortBy] = useState('roi');
+            const [watchlist, setWatchlist] = useState([]);
+            const [viewMode, setViewMode] = useState('split'); // 'split', 'list', 'map'
+
+            const toggleWatchlist = (p) => setWatchlist(prev => prev.some(x => x.id === p.id) ? prev.filter(x => x.id !== p.id) : [...prev, p]);
+
+            // Sort properties
+            const sortedProperties = [...mockProjects].sort((a, b) => {
+                if (sortBy === 'roi') return parseFloat(b.roi) - parseFloat(a.roi);
+                if (sortBy === 'price-low') return a.priceNum - b.priceNum;
+                if (sortBy === 'price-high') return b.priceNum - a.priceNum;
+                return 0;
+            });
+
+            return (
+                <div className="h-screen flex flex-col">
+                    <Header />
+                    <FiltersBar totalResults={mockProjects.length} sortBy={sortBy} setSortBy={setSortBy} />
+
+                    {/* View Toggle (Mobile) */}
+                    <div className="md:hidden flex items-center justify-center gap-2 p-4 bg-white border-b border-eggshell-100">
+                        <button
+                            onClick={() => setViewMode('list')}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${viewMode === 'list' ? 'bg-driven-button text-white' : 'bg-oak-50 text-driven-text'}`}
+                        >
+                            <Icon name="list" className="w-4 h-4" /> List
+                        </button>
+                        <button
+                            onClick={() => setViewMode('map')}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${viewMode === 'map' ? 'bg-driven-button text-white' : 'bg-oak-50 text-driven-text'}`}
+                        >
+                            <Icon name="map" className="w-4 h-4" /> Map
+                        </button>
+                    </div>
+
+                    {/* Split View */}
+                    <div className="flex-1 flex overflow-hidden">
+                        {/* Property List */}
+                        <div className={`${viewMode === 'map' ? 'hidden' : 'flex'} md:flex flex-col w-full md:w-[55%] overflow-y-auto hide-scrollbar bg-white`}>
+                            <div className="p-6 space-y-4">
+                                {sortedProperties.map(property => (
+                                    <PropertyCard
+                                        key={property.id}
+                                        property={property}
+                                        isHighlighted={hoveredId === property.id || selectedProperty?.id === property.id}
+                                        onHover={setHoveredId}
+                                        onSelect={onSelectProperty}
+                                        inWatchlist={watchlist.some(w => w.id === property.id)}
+                                        onToggleWatchlist={toggleWatchlist}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Map */}
+                        <div className={`${viewMode === 'list' ? 'hidden' : 'flex'} md:flex flex-1 sticky top-0`}>
+                            <MapView
+                                properties={sortedProperties}
+                                hoveredId={hoveredId}
+                                setHoveredId={setHoveredId}
+                                selectedProperty={selectedProperty}
+                                setSelectedProperty={setSelectedProperty}
+                                watchlist={watchlist}
+                                onToggleWatchlist={toggleWatchlist}
+                                searchAsMove={searchAsMove}
+                                setSearchAsMove={setSearchAsMove}
+                                onSelect={onSelectProperty}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Mobile Map Button (Floating) */}
+                    <button
+                        onClick={() => setViewMode(viewMode === 'map' ? 'list' : 'map')}
+                        className="md:hidden fixed bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-2 px-6 py-3 bg-driven-button text-white rounded-full shadow-lg z-50"
+                    >
+                        <Icon name={viewMode === 'map' ? 'list' : 'map'} className="w-4 h-4" />
+                        {viewMode === 'map' ? 'Show list' : 'Show map'}
+                    </button>
+                </div>
+            );
+        };
+
+        // App
+        function App() {
+            const [selectedProperty, setSelectedProperty] = useState(null);
+
+            if (selectedProperty) {
+                return (
+                    <div className="min-h-screen bg-white">
+                        <Header />
+                        <div className="max-w-4xl mx-auto p-6">
+                            <button onClick={() => setSelectedProperty(null)} className="flex items-center gap-2 text-eggshell-500 hover:text-driven-text mb-4">
+                                <Icon name="chevronLeft" className="w-4 h-4" /> Back to search
+                            </button>
+                            <div className="bg-white rounded-2xl overflow-hidden border border-eggshell-100">
+                                <img src={selectedProperty.image} alt={selectedProperty.name} className="w-full h-[400px] object-cover" />
+                                <div className="p-6">
+                                    <h1 className="text-2xl font-bold text-driven-text">{selectedProperty.name}</h1>
+                                    <p className="text-eggshell-500">{selectedProperty.location}</p>
+                                    <div className="flex items-center gap-4 mt-4">
+                                        <span className="text-2xl font-bold text-driven-text">AED {selectedProperty.price}</span>
+                                        <span className="bg-oak-50 px-4 py-2 rounded-full text-oak-600 font-bold">{selectedProperty.roi} ROI</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            return <SplitMapView onSelectProperty={setSelectedProperty} />;
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>

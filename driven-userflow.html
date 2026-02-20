@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driven Properties - HNI Investor User Flow</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            padding: 40px;
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            color: #0f172a;
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+        .mermaid {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+        .code-section {
+            margin-top: 40px;
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 24px;
+        }
+        .code-section h3 {
+            color: #f59e0b;
+            margin-bottom: 16px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .code-section p {
+            color: #94a3b8;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        pre {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+        .copy-btn {
+            background: #f59e0b;
+            color: #0f172a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .copy-btn:hover { background: #fbbf24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Driven Properties - HNI Investor Journey</h1>
+        <p class="subtitle">Off-Plan Investment User Flow | Low-Fidelity Wireframe</p>
+
+        <div class="mermaid">
+flowchart TD
+    subgraph DISCOVERY["🔍 DISCOVERY PHASE"]
+        A[/"👤 HNI Investor\nGoogle Search:\n'Off-plan investment Dubai'"/]
+        B["📱 Google SERP\nDriven Properties ranks\nfor target keyword"]
+        A --> B
+    end
+
+    subgraph LANDING["🏠 LANDING PHASE"]
+        C["🌐 HOMEPAGE\n━━━━━━━━━━━━\n• Hero with Value Prop\n• Quick Search Bar\n• Segmented Tabs:\n  Buy | Rent | Off-Plan | Commercial\n• Trust Badges RERA, Awards\n• Featured Projects Carousel"]
+        B --> C
+    end
+
+    subgraph SEARCH["🔎 SEARCH PHASE"]
+        D["📋 OFF-PLAN SEARCH PAGE\n━━━━━━━━━━━━━━━━\nFILTERS:\n• Price Range Slider\n• ROI % Filter\n• Completion Date\n• Developer\n• Location/Area\n• Payment Plan\n━━━━━━━━━━━━━━━━\nSORT BY:\n• Highest ROI\n• Best Appreciation"]
+        C -->|"Clicks 'Off-Plan' Tab"| D
+        E["🤖 AI ADVISOR\nFloating Chat:\n'Show me projects\nunder 2M with 8%+ ROI'"]
+        D --- E
+    end
+
+    subgraph RESULTS["📊 RESULTS PHASE"]
+        F["🏢 PROJECT CARDS\n━━━━━━━━━━━━━\n• Project Image\n• Name & Developer\n• Location Pin\n• Price & PSF\n• ROI Badge\n• Construction %\n• DLD Verified ✓\n━━━━━━━━━━━━━\nCTAs:\n♡ Save | 👁 View Details"]
+        D --> F
+    end
+
+    subgraph DETAIL["📄 DETAIL PHASE"]
+        G["🏗 PROJECT DETAIL PAGE\n━━━━━━━━━━━━━━━━━\nVERIFICATION SECTION:\n• RERA Number\n• Escrow Bank\n• Developer Track Record\n━━━━━━━━━━━━━━━━━\nCONSTRUCTION TRACKER:\n• Progress Bar\n• Milestone Timeline\n━━━━━━━━━━━━━━━━━\nROI CALCULATOR:\n• Rent Slider\n• Holding Period\n• Yield Result"]
+        F -->|"Clicks Project Card"| G
+        H["📞 STICKY CTAs\n━━━━━━━━━━\n• WhatsApp\n• Schedule Visit\n• Call Agent\n• ♡ Add to Watchlist"]
+        G --- H
+    end
+
+    subgraph PORTFOLIO["💼 PORTFOLIO PHASE"]
+        I["❤️ WATCHLIST PAGE\n━━━━━━━━━━━━━━\n• Saved Projects List\n• Multi-Select Checkboxes\n• Portfolio Summary\n• Compare Button\n━━━━━━━━━━━━━━\nCTA: Bulk Inquiry"]
+        G -->|"Saves Multiple Projects"| I
+        J["📨 BULK INQUIRY MODAL\n━━━━━━━━━━━━━━━━\n• Name, Email, Phone\n• Selected Properties\n• Total Portfolio Value\n• Investment Notes\n━━━━━━━━━━━━━━━━\nCTA: Submit Inquiry"]
+        I -->|"Clicks Bulk Inquiry"| J
+    end
+
+    subgraph CONVERSION["✅ CONVERSION"]
+        K["🎯 LEAD CAPTURED\nAdvisor Assigned\nwithin 2 hours"]
+        J --> K
+    end
+
+    style DISCOVERY fill:#e0f2fe,stroke:#0ea5e9,stroke-width:2px
+    style LANDING fill:#fef9c3,stroke:#eab308,stroke-width:2px
+    style SEARCH fill:#dcfce7,stroke:#22c55e,stroke-width:2px
+    style RESULTS fill:#f3e8ff,stroke:#a855f7,stroke-width:2px
+    style DETAIL fill:#ffedd5,stroke:#f97316,stroke-width:2px
+    style PORTFOLIO fill:#fce7f3,stroke:#ec4899,stroke-width:2px
+    style CONVERSION fill:#d1fae5,stroke:#10b981,stroke-width:2px
+        </div>
+
+        <div class="code-section">
+            <h3>📋 Mermaid Code for FigJam</h3>
+            <p>To use in FigJam: Open FigJam → Press "/" → Type "Mermaid" → Paste this code:</p>
+            <button class="copy-btn" onclick="copyCode()">Copy Mermaid Code</button>
+            <pre id="mermaid-code">flowchart TD
+    subgraph DISCOVERY["🔍 DISCOVERY PHASE"]
+        A[/"👤 HNI Investor&lt;br/&gt;Google Search:&lt;br/&gt;'Off-plan investment Dubai'"/]
+        B["📱 Google SERP&lt;br/&gt;Driven Properties ranks&lt;br/&gt;for target keyword"]
+        A --> B
+    end
+
+    subgraph LANDING["🏠 LANDING PHASE"]
+        C["🌐 HOMEPAGE&lt;br/&gt;━━━━━━━━━━━━&lt;br/&gt;• Hero with Value Prop&lt;br/&gt;• Quick Search Bar&lt;br/&gt;• Segmented Tabs&lt;br/&gt;• Trust Badges (RERA)&lt;br/&gt;• Featured Projects"]
+        B --> C
+    end
+
+    subgraph SEARCH["🔎 SEARCH PHASE"]
+        D["📋 OFF-PLAN SEARCH&lt;br/&gt;━━━━━━━━━━━━&lt;br/&gt;FILTERS:&lt;br/&gt;• Price Range&lt;br/&gt;• ROI %&lt;br/&gt;• Completion Date&lt;br/&gt;• Developer&lt;br/&gt;• Location"]
+        C -->|"Clicks Off-Plan Tab"| D
+        E["🤖 AI ADVISOR"]
+        D --- E
+    end
+
+    subgraph RESULTS["📊 RESULTS"]
+        F["🏢 PROJECT CARDS&lt;br/&gt;━━━━━━━━━━━━&lt;br/&gt;• Image & Name&lt;br/&gt;• Price & ROI&lt;br/&gt;• Progress %&lt;br/&gt;• DLD Verified ✓"]
+        D --> F
+    end
+
+    subgraph DETAIL["📄 PROJECT DETAIL"]
+        G["🏗 DETAIL PAGE&lt;br/&gt;━━━━━━━━━━━━&lt;br/&gt;• RERA Verification&lt;br/&gt;• Construction Tracker&lt;br/&gt;• ROI Calculator"]
+        F -->|"View Details"| G
+        H["📞 STICKY CTAs&lt;br/&gt;WhatsApp | Visit | Call"]
+        G --- H
+    end
+
+    subgraph PORTFOLIO["💼 PORTFOLIO"]
+        I["❤️ WATCHLIST&lt;br/&gt;━━━━━━━━━━━━&lt;br/&gt;• Saved Projects&lt;br/&gt;• Multi-Select&lt;br/&gt;• Portfolio Summary"]
+        G -->|"Save to Watchlist"| I
+        J["📨 BULK INQUIRY&lt;br/&gt;Form Modal"]
+        I -->|"Bulk Inquiry"| J
+    end
+
+    subgraph CONVERSION["✅ CONVERSION"]
+        K["🎯 LEAD CAPTURED"]
+        J --> K
+    end</pre>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                fontSize: '14px',
+                fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+
+        function copyCode() {
+            const code = document.getElementById('mermaid-code').textContent;
+            navigator.clipboard.writeText(code);
+            document.querySelector('.copy-btn').textContent = '✓ Copied!';
+            setTimeout(() => {
+                document.querySelector('.copy-btn').textContent = 'Copy Mermaid Code';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

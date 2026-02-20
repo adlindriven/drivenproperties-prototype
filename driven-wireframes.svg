@@ -1,0 +1,767 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 2800" width="1800" height="2800">
+  <defs>
+    <style>
+      .frame { fill: #ffffff; stroke: #e2e8f0; stroke-width: 2; }
+      .header { fill: #1e293b; }
+      .text-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: bold; fill: #1e293b; }
+      .text-label { font-family: Arial, sans-serif; font-size: 11px; fill: #64748b; }
+      .text-small { font-family: Arial, sans-serif; font-size: 9px; fill: #94a3b8; }
+      .text-white { font-family: Arial, sans-serif; font-size: 11px; fill: #ffffff; }
+      .text-screen { font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #0f172a; }
+      .placeholder { fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 1; }
+      .placeholder-dark { fill: #e2e8f0; }
+      .btn-primary { fill: #f59e0b; }
+      .btn-secondary { fill: #1e293b; }
+      .btn-outline { fill: none; stroke: #cbd5e1; stroke-width: 1; }
+      .icon-placeholder { fill: #94a3b8; }
+      .flow-arrow { fill: none; stroke: #f59e0b; stroke-width: 3; marker-end: url(#arrowhead); }
+      .annotation { font-family: Arial, sans-serif; font-size: 10px; fill: #f59e0b; font-weight: bold; }
+      .screen-label { font-family: Arial, sans-serif; font-size: 12px; fill: #64748b; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1800" height="2800" fill="#f8fafc"/>
+
+  <!-- Title -->
+  <text x="900" y="40" text-anchor="middle" font-family="Arial" font-size="24" font-weight="bold" fill="#0f172a">DRIVEN PROPERTIES - HNI Investor Off-Plan Journey</text>
+  <text x="900" y="65" text-anchor="middle" font-family="Arial" font-size="14" fill="#64748b">Low-Fidelity Wireframes | User Flow</text>
+
+  <!-- ==================== SCREEN 1: GOOGLE SERP ==================== -->
+  <g transform="translate(50, 100)">
+    <text x="160" y="0" text-anchor="middle" class="screen-label">SCREEN 1</text>
+    <text x="160" y="20" text-anchor="middle" class="text-screen">Google Search Results</text>
+
+    <!-- Browser Frame -->
+    <rect x="0" y="40" width="320" height="480" rx="8" class="frame"/>
+
+    <!-- Browser Bar -->
+    <rect x="0" y="40" width="320" height="30" rx="8" fill="#f1f5f9"/>
+    <rect x="0" y="62" width="320" height="8" fill="#f1f5f9"/>
+    <circle cx="20" cy="55" r="5" fill="#ef4444"/>
+    <circle cx="35" cy="55" r="5" fill="#eab308"/>
+    <circle cx="50" cy="55" r="5" fill="#22c55e"/>
+    <rect x="70" y="48" width="180" height="14" rx="7" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="80" y="59" class="text-small">google.com/search?q=off-plan+dubai</text>
+
+    <!-- Google Logo Placeholder -->
+    <rect x="20" y="85" width="60" height="20" rx="2" class="placeholder"/>
+    <text x="35" y="99" class="text-small">Google</text>
+
+    <!-- Search Bar -->
+    <rect x="20" y="115" width="280" height="36" rx="18" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+    <text x="35" y="138" class="text-label">off-plan investment dubai high ROI</text>
+
+    <!-- Search Result 1 - Driven Properties (highlighted) -->
+    <rect x="20" y="165" width="280" height="90" rx="4" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+    <text x="30" y="182" class="text-small" fill="#22c55e">Ad · drivenproperties.com</text>
+    <text x="30" y="200" class="text-title" fill="#1e40af">Off-Plan Investment Dubai | 8%+ ROI</text>
+    <text x="30" y="218" class="text-label">Verified projects with DLD escrow protection.</text>
+    <text x="30" y="233" class="text-label">ROI Calculator · Construction Tracker · Expert...</text>
+    <text x="30" y="248" class="annotation">← User clicks this result</text>
+
+    <!-- Search Result 2 -->
+    <rect x="20" y="265" width="280" height="70" rx="4" class="placeholder"/>
+    <text x="30" y="282" class="text-small">bayut.com › off-plan</text>
+    <text x="30" y="298" class="text-label" fill="#1e40af">Off Plan Properties for Sale in Dubai</text>
+    <rect x="30" y="310" width="200" height="8" rx="2" class="placeholder-dark"/>
+
+    <!-- Search Result 3 -->
+    <rect x="20" y="345" width="280" height="70" rx="4" class="placeholder"/>
+    <text x="30" y="362" class="text-small">propertyfinder.ae</text>
+    <text x="30" y="378" class="text-label" fill="#1e40af">New Projects in Dubai - Off Plan</text>
+    <rect x="30" y="390" width="180" height="8" rx="2" class="placeholder-dark"/>
+
+    <!-- Search Result 4 -->
+    <rect x="20" y="425" width="280" height="70" rx="4" class="placeholder"/>
+    <text x="30" y="442" class="text-small">emaar.com</text>
+    <text x="30" y="458" class="text-label" fill="#1e40af">Emaar Off Plan Projects Dubai</text>
+    <rect x="30" y="470" width="160" height="8" rx="2" class="placeholder-dark"/>
+  </g>
+
+  <!-- Arrow 1 to 2 -->
+  <path d="M 390 380 L 440 380" class="flow-arrow"/>
+
+  <!-- ==================== SCREEN 2: HOMEPAGE ==================== -->
+  <g transform="translate(470, 100)">
+    <text x="160" y="0" text-anchor="middle" class="screen-label">SCREEN 2</text>
+    <text x="160" y="20" text-anchor="middle" class="text-screen">Homepage</text>
+
+    <!-- Browser Frame -->
+    <rect x="0" y="40" width="320" height="480" rx="8" class="frame"/>
+
+    <!-- Header/Nav -->
+    <rect x="0" y="40" width="320" height="50" class="header"/>
+    <text x="15" y="70" class="text-white" font-weight="bold">DRIVEN PROPERTIES</text>
+    <rect x="200" y="55" width="50" height="20" rx="10" class="placeholder"/>
+    <rect x="260" y="55" width="45" height="20" rx="4" class="btn-primary"/>
+    <text x="268" y="69" class="text-small">Login</text>
+
+    <!-- Segmented Tabs -->
+    <rect x="20" y="100" width="280" height="32" rx="6" fill="#f1f5f9"/>
+    <rect x="22" y="102" width="68" height="28" rx="5" fill="#ffffff"/>
+    <text x="42" y="120" class="text-small">Buy</text>
+    <text x="105" y="120" class="text-small">Rent</text>
+    <rect x="150" y="102" width="68" height="28" rx="5" class="btn-primary"/>
+    <text x="163" y="120" class="text-small" font-weight="bold">Off-Plan</text>
+    <text x="240" y="120" class="text-small">Commercial</text>
+    <text x="185" y="145" class="annotation">↑ User clicks Off-Plan</text>
+
+    <!-- Hero Section -->
+    <rect x="20" y="150" width="280" height="100" rx="4" fill="#1e293b"/>
+    <text x="30" y="175" class="text-white" font-weight="bold">Invest in Dubai Off-Plan</text>
+    <text x="30" y="195" class="text-white" font-size="9">Data-driven selection for maximum ROI</text>
+
+    <!-- Search Bar in Hero -->
+    <rect x="30" y="210" width="200" height="30" rx="6" fill="#ffffff"/>
+    <text x="40" y="230" class="text-small" fill="#94a3b8">Search projects, areas...</text>
+    <rect x="235" y="210" width="55" height="30" rx="6" class="btn-primary"/>
+    <text x="248" y="229" class="text-small">Search</text>
+
+    <!-- Trust Badges -->
+    <rect x="20" y="260" width="280" height="35" rx="4" fill="#f0fdf4"/>
+    <rect x="30" y="268" width="60" height="20" rx="3" fill="#ffffff" stroke="#22c55e"/>
+    <text x="38" y="282" class="text-small">✓ RERA</text>
+    <rect x="100" y="268" width="80" height="20" rx="3" fill="#ffffff" stroke="#22c55e"/>
+    <text x="108" y="282" class="text-small">✓ DLD Verified</text>
+    <rect x="190" y="268" width="70" height="20" rx="3" fill="#ffffff" stroke="#22c55e"/>
+    <text x="198" y="282" class="text-small">✓ Escrow</text>
+
+    <!-- Featured Section -->
+    <text x="20" y="315" class="text-title">Featured Off-Plan Projects</text>
+    <text x="240" y="315" class="text-small" fill="#f59e0b">View All →</text>
+
+    <!-- Project Cards Row -->
+    <rect x="20" y="325" width="130" height="100" rx="4" class="placeholder"/>
+    <rect x="20" y="325" width="130" height="55" rx="4" fill="#cbd5e1"/>
+    <text x="30" y="395" class="text-small" font-weight="bold">Emaar Beachfront</text>
+    <text x="30" y="410" class="text-small">AED 1.85M | 8.2% ROI</text>
+
+    <rect x="160" y="325" width="130" height="100" rx="4" class="placeholder"/>
+    <rect x="160" y="325" width="130" height="55" rx="4" fill="#cbd5e1"/>
+    <text x="170" y="395" class="text-small" font-weight="bold">Sobha One</text>
+    <text x="170" y="410" class="text-small">AED 2.4M | 7.8% ROI</text>
+
+    <!-- Why Invest Section -->
+    <rect x="20" y="440" width="280" height="60" rx="4" fill="#fef3c7"/>
+    <text x="30" y="460" class="text-title">Why Invest with Driven?</text>
+    <text x="30" y="480" class="text-small">✓ 500+ Verified Projects  ✓ ROI Calculator</text>
+    <text x="30" y="492" class="text-small">✓ Construction Tracking  ✓ Expert Advisors</text>
+  </g>
+
+  <!-- Arrow 2 to 3 -->
+  <path d="M 810 380 L 860 380" class="flow-arrow"/>
+
+  <!-- ==================== SCREEN 3: OFF-PLAN SEARCH ==================== -->
+  <g transform="translate(890, 100)">
+    <text x="160" y="0" text-anchor="middle" class="screen-label">SCREEN 3</text>
+    <text x="160" y="20" text-anchor="middle" class="text-screen">Off-Plan Search + Filters</text>
+
+    <!-- Browser Frame -->
+    <rect x="0" y="40" width="320" height="480" rx="8" class="frame"/>
+
+    <!-- Header -->
+    <rect x="0" y="40" width="320" height="50" class="header"/>
+    <text x="15" y="70" class="text-white" font-weight="bold">DRIVEN</text>
+    <rect x="120" y="52" width="36" height="26" rx="4" class="btn-primary"/>
+    <text x="124" y="69" class="text-small">Off-Plan</text>
+    <rect x="250" y="55" width="20" height="20" rx="4" class="placeholder"/>
+    <text x="255" y="69" class="text-small">♡</text>
+    <rect x="280" y="55" width="25" height="20" rx="4" class="btn-primary"/>
+
+    <!-- Search Bar -->
+    <rect x="15" y="100" width="220" height="32" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="25" y="120" class="text-small" fill="#94a3b8">🔍 Search by project, area...</text>
+    <rect x="240" y="100" width="65" height="32" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="250" y="120" class="text-small">⚙ Filters</text>
+
+    <!-- Filter Tags -->
+    <rect x="15" y="140" width="70" height="22" rx="11" fill="#fef3c7" stroke="#f59e0b"/>
+    <text x="22" y="155" class="text-small">High ROI 8%+</text>
+    <rect x="90" y="140" width="65" height="22" rx="11" class="placeholder"/>
+    <text x="98" y="155" class="text-small">Under 2M</text>
+    <rect x="160" y="140" width="70" height="22" rx="11" class="placeholder"/>
+    <text x="168" y="155" class="text-small">Ready 2026</text>
+    <rect x="235" y="140" width="55" height="22" rx="11" class="placeholder"/>
+    <text x="243" y="155" class="text-small">60/40</text>
+
+    <!-- Results Count & Sort -->
+    <text x="15" y="180" class="text-title">24 Investment Projects</text>
+    <rect x="220" y="165" width="85" height="24" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="228" y="181" class="text-small">Sort: Highest ROI ▼</text>
+
+    <!-- Project Card 1 -->
+    <rect x="15" y="195" width="290" height="85" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="200" width="75" height="55" rx="4" fill="#cbd5e1"/>
+    <text x="105" y="215" class="text-title">Emaar Beachfront Vista</text>
+    <text x="105" y="230" class="text-small">📍 Dubai Harbour</text>
+    <text x="105" y="245" class="text-small" font-weight="bold">AED 1.85M</text>
+    <text x="180" y="245" class="text-small" fill="#22c55e">8.2% ROI</text>
+    <rect x="105" y="252" width="100" height="6" rx="3" fill="#e2e8f0"/>
+    <rect x="105" y="252" width="65" height="6" rx="3" fill="#22c55e"/>
+    <text x="210" y="258" class="text-small">65%</text>
+    <rect x="245" y="212" width="50" height="22" rx="4" class="btn-secondary"/>
+    <text x="255" y="227" class="text-small" fill="#ffffff">View</text>
+    <rect x="250" y="248" width="20" height="20" rx="4" class="btn-outline"/>
+    <text x="255" y="262" class="text-small">♡</text>
+    <rect x="20" y="260" width="50" height="15" rx="2" fill="#dcfce7"/>
+    <text x="25" y="271" class="text-small" fill="#166534">✓ DLD</text>
+
+    <!-- Project Card 2 -->
+    <rect x="15" y="290" width="290" height="85" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="295" width="75" height="55" rx="4" fill="#cbd5e1"/>
+    <text x="105" y="310" class="text-title">Sobha One Tower</text>
+    <text x="105" y="325" class="text-small">📍 Sobha Hartland</text>
+    <text x="105" y="340" class="text-small" font-weight="bold">AED 2.4M</text>
+    <text x="175" y="340" class="text-small" fill="#22c55e">7.8% ROI</text>
+    <rect x="105" y="347" width="100" height="6" rx="3" fill="#e2e8f0"/>
+    <rect x="105" y="347" width="42" height="6" rx="3" fill="#f59e0b"/>
+    <text x="210" y="353" class="text-small">42%</text>
+    <rect x="245" y="307" width="50" height="22" rx="4" class="btn-secondary"/>
+    <text x="255" y="322" class="text-small" fill="#ffffff">View</text>
+
+    <!-- Project Card 3 -->
+    <rect x="15" y="385" width="290" height="85" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="20" y="390" width="75" height="55" rx="4" fill="#cbd5e1"/>
+    <text x="105" y="405" class="text-title">DAMAC Lagoons Villas</text>
+    <text x="105" y="420" class="text-small">📍 DAMAC Lagoons</text>
+    <text x="105" y="435" class="text-small" font-weight="bold">AED 3.1M</text>
+    <text x="175" y="435" class="text-small" fill="#22c55e">9.1% ROI</text>
+    <rect x="105" y="442" width="100" height="6" rx="3" fill="#e2e8f0"/>
+    <rect x="105" y="442" width="78" height="6" rx="3" fill="#22c55e"/>
+    <text x="210" y="448" class="text-small">78%</text>
+    <rect x="245" y="402" width="50" height="22" rx="4" class="btn-secondary"/>
+    <text x="255" y="417" class="text-small" fill="#ffffff">View</text>
+
+    <!-- AI Advisor Floating Button -->
+    <rect x="240" y="480" width="65" height="30" rx="15" class="btn-primary"/>
+    <text x="250" y="499" class="text-small">🤖 AI Help</text>
+
+    <!-- Annotation -->
+    <text x="160" y="540" text-anchor="middle" class="annotation">User clicks "View" on Project Card</text>
+  </g>
+
+  <!-- Arrow 3 to 4 -->
+  <path d="M 1230 380 L 1280 380" class="flow-arrow"/>
+
+  <!-- ==================== SCREEN 4: PROJECT DETAIL ==================== -->
+  <g transform="translate(1310, 100)">
+    <text x="160" y="0" text-anchor="middle" class="screen-label">SCREEN 4</text>
+    <text x="160" y="20" text-anchor="middle" class="text-screen">Project Detail + Verification</text>
+
+    <!-- Browser Frame -->
+    <rect x="0" y="40" width="320" height="480" rx="8" class="frame"/>
+
+    <!-- Header -->
+    <rect x="0" y="40" width="320" height="50" class="header"/>
+    <text x="15" y="70" class="text-white">← Back</text>
+    <text x="150" y="70" class="text-white" font-weight="bold">Project Detail</text>
+    <rect x="280" y="55" width="25" height="20" rx="4" class="btn-outline"/>
+    <text x="287" y="69" class="text-white">♡</text>
+
+    <!-- Hero Image -->
+    <rect x="0" y="90" width="320" height="100" fill="#cbd5e1"/>
+    <rect x="10" y="100" width="60" height="20" rx="3" fill="#22c55e"/>
+    <text x="18" y="114" class="text-small" fill="#ffffff">✓ DLD Verified</text>
+    <rect x="75" y="100" width="55" height="20" rx="3" class="btn-primary"/>
+    <text x="83" y="114" class="text-small">🔥 Trending</text>
+
+    <!-- Project Name -->
+    <text x="15" y="210" class="text-title" font-size="14">Emaar Beachfront Vista</text>
+    <text x="15" y="225" class="text-small">📍 Dubai Harbour · by Emaar Properties</text>
+
+    <!-- Price & ROI Row -->
+    <rect x="15" y="235" width="290" height="40" rx="6" fill="#f8fafc"/>
+    <text x="25" y="255" class="text-title">AED 1.85M</text>
+    <text x="25" y="268" class="text-small">AED 2,150/sqft</text>
+    <rect x="160" y="242" width="1" height="26" fill="#e2e8f0"/>
+    <text x="175" y="255" class="text-small" fill="#22c55e" font-weight="bold">8.2% ROI</text>
+    <text x="175" y="268" class="text-small">Expected Yield</text>
+    <text x="250" y="255" class="text-small" fill="#f59e0b" font-weight="bold">+12.4%</text>
+    <text x="250" y="268" class="text-small">Growth</text>
+
+    <!-- Verification Section -->
+    <rect x="15" y="285" width="290" height="70" rx="6" fill="#f0fdf4" stroke="#22c55e"/>
+    <text x="25" y="302" class="text-small" font-weight="bold" fill="#166534">🛡 Project Verification</text>
+    <text x="25" y="320" class="text-small">RERA: RERA-2024-0892 ✓</text>
+    <text x="165" y="320" class="text-small">Escrow: Emirates NBD ✓</text>
+    <text x="25" y="338" class="text-small">Developer: 42 Projects Delivered ✓</text>
+    <text x="200" y="348" class="text-small" fill="#f59e0b">Verify on DLD →</text>
+
+    <!-- Construction Progress -->
+    <text x="15" y="375" class="text-title">🏗 Construction Progress</text>
+    <rect x="15" y="385" width="290" height="12" rx="6" fill="#e2e8f0"/>
+    <rect x="15" y="385" width="188" height="12" rx="6" fill="#22c55e"/>
+    <text x="210" y="395" class="text-small" font-weight="bold">65%</text>
+    <text x="270" y="395" class="text-small">Q4 2026</text>
+
+    <!-- Milestone Timeline (simplified) -->
+    <rect x="15" y="405" width="290" height="50" rx="4" class="placeholder"/>
+    <text x="25" y="425" class="text-small">✓ Foundation → ✓ Structure → ○ MEP → ○ Finishing</text>
+    <text x="25" y="445" class="text-small" fill="#64748b">Current: Structure Complete</text>
+
+    <!-- Sticky CTAs -->
+    <rect x="0" y="465" width="320" height="55" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="15" y="475" width="90" height="35" rx="6" class="btn-primary"/>
+    <text x="30" y="497" class="text-small" font-weight="bold">💬 WhatsApp</text>
+    <rect x="115" y="475" width="90" height="35" rx="6" class="btn-secondary"/>
+    <text x="130" y="497" class="text-small" fill="#ffffff">📅 Schedule</text>
+    <rect x="215" y="475" width="90" height="35" rx="6" class="btn-outline"/>
+    <text x="235" y="497" class="text-small">📞 Call</text>
+  </g>
+
+  <!-- ==================== ROW 2 ==================== -->
+
+  <!-- Arrow 4 to 5 -->
+  <path d="M 900 600 L 900 680" class="flow-arrow"/>
+  <text x="920" y="660" class="annotation">User saves multiple projects to Watchlist</text>
+
+  <!-- ==================== SCREEN 5: ROI CALCULATOR ==================== -->
+  <g transform="translate(50, 700)">
+    <text x="160" y="0" text-anchor="middle" class="screen-label">SCREEN 5</text>
+    <text x="160" y="20" text-anchor="middle" class="text-screen">ROI Calculator (Modal/Section)</text>
+
+    <!-- Frame -->
+    <rect x="0" y="40" width="320" height="400" rx="8" class="frame"/>
+
+    <!-- Header -->
+    <rect x="0" y="40" width="320" height="45" fill="#1e293b" rx="8"/>
+    <rect x="0" y="77" width="320" height="8" fill="#1e293b"/>
+    <text x="15" y="68" class="text-white" font-weight="bold">📊 ROI Calculator</text>
+    <text x="285" y="68" class="text-white">✕</text>
+
+    <!-- Property Info -->
+    <rect x="15" y="100" width="290" height="50" rx="4" fill="#f8fafc"/>
+    <text x="25" y="120" class="text-small" fill="#64748b">Selected Property</text>
+    <text x="25" y="138" class="text-title">Emaar Beachfront Vista - 2BR</text>
+
+    <!-- Input: Purchase Price -->
+    <text x="15" y="170" class="text-small" fill="#64748b">Purchase Price (AED)</text>
+    <rect x="15" y="178" width="290" height="35" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="25" y="200" class="text-title">1,850,000</text>
+
+    <!-- Input: Expected Annual Rent -->
+    <text x="15" y="235" class="text-small" fill="#64748b">Expected Annual Rent (AED)</text>
+    <rect x="15" y="243" width="290" height="35" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="25" y="265" class="text-title">120,000</text>
+    <!-- Slider -->
+    <rect x="15" y="283" width="290" height="6" rx="3" fill="#e2e8f0"/>
+    <rect x="15" y="283" width="145" height="6" rx="3" class="btn-primary"/>
+    <circle cx="160" cy="286" r="8" fill="#f59e0b" stroke="#ffffff" stroke-width="2"/>
+    <text x="15" y="305" class="text-small">80K</text>
+    <text x="285" y="305" class="text-small">200K</text>
+
+    <!-- Input: Holding Period -->
+    <text x="15" y="330" class="text-small" fill="#64748b">Holding Period (Years)</text>
+    <rect x="15" y="338" width="65" height="32" rx="4" class="placeholder"/>
+    <text x="40" y="359" class="text-small">3y</text>
+    <rect x="90" y="338" width="65" height="32" rx="4" class="btn-primary"/>
+    <text x="115" y="359" class="text-small" font-weight="bold">5y</text>
+    <rect x="165" y="338" width="65" height="32" rx="4" class="placeholder"/>
+    <text x="190" y="359" class="text-small">7y</text>
+    <rect x="240" y="338" width="65" height="32" rx="4" class="placeholder"/>
+    <text x="263" y="359" class="text-small">10y</text>
+
+    <!-- Results -->
+    <rect x="15" y="385" width="290" height="45" rx="6" fill="#dcfce7"/>
+    <text x="30" y="405" class="text-small">Annual Yield</text>
+    <text x="30" y="422" class="text-title" fill="#166534">6.5%</text>
+    <rect x="155" y="390" width="1" height="35" fill="#86efac"/>
+    <text x="170" y="405" class="text-small">5-Year Total Return</text>
+    <text x="170" y="422" class="text-title" fill="#166534">32.5%</text>
+  </g>
+
+  <!-- ==================== SCREEN 6: WATCHLIST ==================== -->
+  <g transform="translate(470, 700)">
+    <text x="160" y="0" text-anchor="middle" class="screen-label">SCREEN 6</text>
+    <text x="160" y="20" text-anchor="middle" class="text-screen">Watchlist / Portfolio</text>
+
+    <!-- Frame -->
+    <rect x="0" y="40" width="320" height="400" rx="8" class="frame"/>
+
+    <!-- Header -->
+    <rect x="0" y="40" width="320" height="50" class="header"/>
+    <text x="15" y="70" class="text-white">← Back</text>
+    <text x="100" y="70" class="text-white" font-weight="bold">My Watchlist (3)</text>
+
+    <!-- Bulk Inquiry Button -->
+    <rect x="235" y="55" width="70" height="25" rx="4" class="btn-primary"/>
+    <text x="243" y="72" class="text-small" font-weight="bold">Bulk Inquiry</text>
+
+    <!-- Select All -->
+    <rect x="15" y="100" width="290" height="30" rx="4" fill="#f8fafc"/>
+    <rect x="25" y="108" width="14" height="14" rx="2" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="45" y="120" class="text-small">Select all for portfolio inquiry</text>
+    <text x="230" y="120" class="text-small" fill="#f59e0b">Compare →</text>
+
+    <!-- Property 1 (Selected) -->
+    <rect x="15" y="140" width="290" height="60" rx="6" fill="#fffbeb" stroke="#f59e0b"/>
+    <rect x="25" y="160" width="14" height="14" rx="2" class="btn-primary"/>
+    <text x="30" y="171" class="text-small" fill="#ffffff">✓</text>
+    <rect x="50" y="150" width="50" height="40" rx="4" fill="#cbd5e1"/>
+    <text x="110" y="165" class="text-small" font-weight="bold">Emaar Beachfront</text>
+    <text x="110" y="180" class="text-small">AED 1.85M · 8.2% ROI</text>
+    <text x="110" y="193" class="text-small" fill="#22c55e">65% Complete</text>
+    <text x="275" y="175" class="text-small" fill="#ef4444">🗑</text>
+
+    <!-- Property 2 (Selected) -->
+    <rect x="15" y="210" width="290" height="60" rx="6" fill="#fffbeb" stroke="#f59e0b"/>
+    <rect x="25" y="230" width="14" height="14" rx="2" class="btn-primary"/>
+    <text x="30" y="241" class="text-small" fill="#ffffff">✓</text>
+    <rect x="50" y="220" width="50" height="40" rx="4" fill="#cbd5e1"/>
+    <text x="110" y="235" class="text-small" font-weight="bold">Sobha One Tower</text>
+    <text x="110" y="250" class="text-small">AED 2.4M · 7.8% ROI</text>
+    <text x="110" y="263" class="text-small" fill="#f59e0b">42% Complete</text>
+    <text x="275" y="245" class="text-small" fill="#ef4444">🗑</text>
+
+    <!-- Property 3 (Selected) -->
+    <rect x="15" y="280" width="290" height="60" rx="6" fill="#fffbeb" stroke="#f59e0b"/>
+    <rect x="25" y="300" width="14" height="14" rx="2" class="btn-primary"/>
+    <text x="30" y="311" class="text-small" fill="#ffffff">✓</text>
+    <rect x="50" y="290" width="50" height="40" rx="4" fill="#cbd5e1"/>
+    <text x="110" y="305" class="text-small" font-weight="bold">DAMAC Lagoons</text>
+    <text x="110" y="320" class="text-small">AED 3.1M · 9.1% ROI</text>
+    <text x="110" y="333" class="text-small" fill="#22c55e">78% Complete</text>
+    <text x="275" y="315" class="text-small" fill="#ef4444">🗑</text>
+
+    <!-- Portfolio Summary -->
+    <rect x="15" y="355" width="290" height="75" rx="6" fill="#1e293b"/>
+    <text x="25" y="375" class="text-white" font-weight="bold">Portfolio Summary</text>
+    <text x="25" y="395" class="text-small" fill="#94a3b8">Total Value</text>
+    <text x="25" y="415" class="text-white" font-weight="bold">AED 7.35M</text>
+    <text x="120" y="395" class="text-small" fill="#94a3b8">Avg ROI</text>
+    <text x="120" y="415" class="text-white" font-weight="bold" fill="#4ade80">8.4%</text>
+    <text x="200" y="395" class="text-small" fill="#94a3b8">Properties</text>
+    <text x="200" y="415" class="text-white" font-weight="bold">3</text>
+    <text x="260" y="395" class="text-small" fill="#94a3b8">Handover</text>
+    <text x="260" y="415" class="text-white" font-weight="bold">Q1 2026</text>
+  </g>
+
+  <!-- Arrow 6 to 7 -->
+  <path d="M 810 900 L 860 900" class="flow-arrow"/>
+
+  <!-- ==================== SCREEN 7: BULK INQUIRY MODAL ==================== -->
+  <g transform="translate(890, 700)">
+    <text x="160" y="0" text-anchor="middle" class="screen-label">SCREEN 7</text>
+    <text x="160" y="20" text-anchor="middle" class="text-screen">Bulk Inquiry Form</text>
+
+    <!-- Frame -->
+    <rect x="0" y="40" width="320" height="400" rx="8" class="frame"/>
+
+    <!-- Modal Overlay -->
+    <rect x="0" y="40" width="320" height="400" rx="8" fill="#000000" opacity="0.3"/>
+
+    <!-- Modal -->
+    <rect x="20" y="60" width="280" height="360" rx="12" fill="#ffffff"/>
+
+    <!-- Modal Header -->
+    <text x="35" y="90" class="text-title" font-size="14">📨 Portfolio Inquiry</text>
+    <text x="275" y="90" class="text-small" fill="#64748b">✕</text>
+
+    <!-- Selected Properties Summary -->
+    <rect x="35" y="105" width="250" height="45" rx="6" fill="#f8fafc"/>
+    <text x="45" y="125" class="text-small">Inquiring about 3 properties</text>
+    <text x="45" y="142" class="text-title">Total Value: AED 7.35M</text>
+
+    <!-- Form Fields -->
+    <text x="35" y="170" class="text-small" fill="#64748b">Full Name *</text>
+    <rect x="35" y="178" width="250" height="32" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+
+    <text x="35" y="225" class="text-small" fill="#64748b">Email Address *</text>
+    <rect x="35" y="233" width="250" height="32" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+
+    <text x="35" y="280" class="text-small" fill="#64748b">WhatsApp Number *</text>
+    <rect x="35" y="288" width="250" height="32" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+
+    <text x="35" y="335" class="text-small" fill="#64748b">Investment Notes (Optional)</text>
+    <rect x="35" y="343" width="250" height="40" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+
+    <!-- Submit Button -->
+    <rect x="35" y="395" width="250" height="40" rx="6" class="btn-primary"/>
+    <text x="115" y="420" class="text-small" font-weight="bold">Submit Inquiry →</text>
+  </g>
+
+  <!-- Arrow 7 to 8 -->
+  <path d="M 1230 900 L 1280 900" class="flow-arrow"/>
+
+  <!-- ==================== SCREEN 8: SUCCESS ==================== -->
+  <g transform="translate(1310, 700)">
+    <text x="160" y="0" text-anchor="middle" class="screen-label">SCREEN 8</text>
+    <text x="160" y="20" text-anchor="middle" class="text-screen">Success / Conversion</text>
+
+    <!-- Frame -->
+    <rect x="0" y="40" width="320" height="400" rx="8" class="frame"/>
+
+    <!-- Content -->
+    <rect x="0" y="40" width="320" height="400" rx="8" fill="#f0fdf4"/>
+
+    <!-- Success Icon -->
+    <circle cx="160" cy="150" r="50" fill="#22c55e"/>
+    <text x="160" y="165" text-anchor="middle" font-size="40" fill="#ffffff">✓</text>
+
+    <!-- Success Message -->
+    <text x="160" y="230" text-anchor="middle" class="text-title" font-size="16">Inquiry Submitted!</text>
+    <text x="160" y="255" text-anchor="middle" class="text-small">Your portfolio inquiry has been received.</text>
+
+    <!-- Next Steps -->
+    <rect x="30" y="280" width="260" height="80" rx="8" fill="#ffffff"/>
+    <text x="50" y="305" class="text-small" font-weight="bold">What's Next?</text>
+    <text x="50" y="325" class="text-small">✓ A dedicated investment advisor will</text>
+    <text x="50" y="340" class="text-small">   contact you within 2 hours</text>
+    <text x="50" y="355" class="text-small">✓ Your inquiry ID: #DRV-2026-4521</text>
+
+    <!-- CTAs -->
+    <rect x="30" y="375" width="125" height="35" rx="6" class="btn-primary"/>
+    <text x="55" y="397" class="text-small" font-weight="bold">Back to Search</text>
+    <rect x="165" y="375" width="125" height="35" rx="6" class="btn-outline"/>
+    <text x="195" y="397" class="text-small">View Watchlist</text>
+  </g>
+
+  <!-- ==================== FILTER PANEL DETAIL ==================== -->
+  <g transform="translate(50, 1200)">
+    <text x="370" y="0" text-anchor="middle" class="text-screen">FILTER PANEL - Detailed View</text>
+
+    <!-- Frame -->
+    <rect x="0" y="20" width="320" height="500" rx="8" class="frame"/>
+
+    <!-- Header -->
+    <rect x="0" y="20" width="320" height="45" fill="#1e293b" rx="8"/>
+    <rect x="0" y="57" width="320" height="8" fill="#1e293b"/>
+    <text x="15" y="48" class="text-white">← Close</text>
+    <text x="130" y="48" class="text-white" font-weight="bold">Filters</text>
+    <text x="270" y="48" class="text-white" fill="#f59e0b">Reset All</text>
+
+    <!-- Price Range -->
+    <text x="15" y="90" class="text-title">Price Range (AED)</text>
+    <rect x="15" y="100" width="130" height="35" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="25" y="123" class="text-small">Min: 1,000,000</text>
+    <rect x="155" y="100" width="130" height="35" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="165" y="123" class="text-small">Max: 5,000,000</text>
+    <!-- Slider -->
+    <rect x="15" y="145" width="270" height="6" rx="3" fill="#e2e8f0"/>
+    <rect x="50" y="145" width="150" height="6" rx="3" class="btn-primary"/>
+    <circle cx="50" cy="148" r="8" fill="#f59e0b" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="200" cy="148" r="8" fill="#f59e0b" stroke="#ffffff" stroke-width="2"/>
+
+    <!-- ROI Filter -->
+    <text x="15" y="185" class="text-title">Minimum ROI (%)</text>
+    <rect x="15" y="195" width="55" height="30" rx="4" class="placeholder"/>
+    <text x="32" y="215" class="text-small">5%+</text>
+    <rect x="80" y="195" width="55" height="30" rx="4" class="placeholder"/>
+    <text x="97" y="215" class="text-small">6%+</text>
+    <rect x="145" y="195" width="55" height="30" rx="4" class="btn-primary"/>
+    <text x="160" y="215" class="text-small" font-weight="bold">7%+</text>
+    <rect x="210" y="195" width="55" height="30" rx="4" class="placeholder"/>
+    <text x="227" y="215" class="text-small">8%+</text>
+
+    <!-- Completion Date -->
+    <text x="15" y="250" class="text-title">Completion Date</text>
+    <rect x="15" y="260" width="85" height="30" rx="4" class="btn-primary"/>
+    <text x="35" y="280" class="text-small" font-weight="bold">2025-2026</text>
+    <rect x="110" y="260" width="85" height="30" rx="4" class="placeholder"/>
+    <text x="130" y="280" class="text-small">2026-2027</text>
+    <rect x="205" y="260" width="85" height="30" rx="4" class="placeholder"/>
+    <text x="228" y="280" class="text-small">2027+</text>
+
+    <!-- Developer -->
+    <text x="15" y="315" class="text-title">Developer</text>
+    <rect x="15" y="325" width="270" height="35" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="25" y="348" class="text-small">All Developers ▼</text>
+
+    <!-- Location -->
+    <text x="15" y="380" class="text-title">Location / Area</text>
+    <rect x="15" y="390" width="270" height="35" rx="4" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="25" y="413" class="text-small">All Areas ▼</text>
+
+    <!-- Payment Plan -->
+    <text x="15" y="450" class="text-title">Payment Plan</text>
+    <rect x="15" y="460" width="80" height="28" rx="4" class="btn-primary"/>
+    <text x="35" y="479" class="text-small" font-weight="bold">60/40</text>
+    <rect x="105" y="460" width="80" height="28" rx="4" class="placeholder"/>
+    <text x="125" y="479" class="text-small">70/30</text>
+    <rect x="195" y="460" width="80" height="28" rx="4" class="placeholder"/>
+    <text x="215" y="479" class="text-small">80/20</text>
+
+    <!-- Apply Button -->
+    <rect x="15" y="500" width="270" height="40" rx="6" class="btn-primary"/>
+    <text x="115" y="525" class="text-small" font-weight="bold">Apply Filters (24 Results)</text>
+  </g>
+
+  <!-- ==================== CONSTRUCTION TRACKER DETAIL ==================== -->
+  <g transform="translate(420, 1200)">
+    <text x="200" y="0" text-anchor="middle" class="text-screen">CONSTRUCTION TRACKER - Detailed View</text>
+
+    <!-- Frame -->
+    <rect x="0" y="20" width="400" height="500" rx="8" class="frame"/>
+
+    <!-- Header -->
+    <text x="20" y="55" class="text-title">🏗 Construction Progress</text>
+
+    <!-- Progress Bar -->
+    <text x="20" y="85" class="text-small" fill="#64748b">Overall Completion</text>
+    <rect x="20" y="95" width="360" height="20" rx="10" fill="#e2e8f0"/>
+    <rect x="20" y="95" width="234" height="20" rx="10" fill="#22c55e"/>
+    <text x="390" y="110" class="text-title" text-anchor="end">65%</text>
+
+    <!-- Current Stage -->
+    <rect x="20" y="130" width="360" height="40" rx="6" fill="#fef3c7"/>
+    <text x="35" y="155" class="text-small" font-weight="bold" fill="#92400e">Current Stage: Structure Complete</text>
+    <text x="300" y="155" class="text-small" fill="#92400e">Expected: Q4 2026</text>
+
+    <!-- Timeline -->
+    <text x="20" y="195" class="text-title">Milestone Timeline</text>
+
+    <!-- Milestone 1 - Complete -->
+    <circle cx="40" cy="225" r="12" fill="#22c55e"/>
+    <text x="35" y="230" class="text-small" fill="#ffffff">✓</text>
+    <rect x="40" y="237" width="2" height="30" fill="#22c55e"/>
+    <text x="65" y="225" class="text-small" font-weight="bold">Ground Breaking</text>
+    <text x="65" y="240" class="text-small" fill="#64748b">Jan 2024</text>
+    <text x="330" y="230" class="text-small" fill="#22c55e">Complete</text>
+
+    <!-- Milestone 2 - Complete -->
+    <circle cx="40" cy="280" r="12" fill="#22c55e"/>
+    <text x="35" y="285" class="text-small" fill="#ffffff">✓</text>
+    <rect x="40" y="292" width="2" height="30" fill="#22c55e"/>
+    <text x="65" y="280" class="text-small" font-weight="bold">Foundation Complete</text>
+    <text x="65" y="295" class="text-small" fill="#64748b">Apr 2024</text>
+    <text x="330" y="285" class="text-small" fill="#22c55e">Complete</text>
+
+    <!-- Milestone 3 - Complete -->
+    <circle cx="40" cy="335" r="12" fill="#22c55e"/>
+    <text x="35" y="340" class="text-small" fill="#ffffff">✓</text>
+    <rect x="40" y="347" width="2" height="30" fill="#22c55e"/>
+    <text x="65" y="335" class="text-small" font-weight="bold">Structure 50%</text>
+    <text x="65" y="350" class="text-small" fill="#64748b">Aug 2024</text>
+    <text x="330" y="340" class="text-small" fill="#22c55e">Complete</text>
+
+    <!-- Milestone 4 - Complete (Current) -->
+    <circle cx="40" cy="390" r="12" fill="#f59e0b"/>
+    <text x="35" y="395" class="text-small" fill="#ffffff">★</text>
+    <rect x="40" y="402" width="2" height="30" fill="#e2e8f0"/>
+    <text x="65" y="390" class="text-small" font-weight="bold" fill="#f59e0b">Structure Complete</text>
+    <text x="65" y="405" class="text-small" fill="#64748b">Dec 2024</text>
+    <text x="330" y="395" class="text-small" fill="#f59e0b">Current</text>
+
+    <!-- Milestone 5 - Pending -->
+    <circle cx="40" cy="445" r="12" fill="#e2e8f0"/>
+    <rect x="40" y="457" width="2" height="30" fill="#e2e8f0"/>
+    <text x="65" y="445" class="text-small" fill="#94a3b8">MEP Installation</text>
+    <text x="65" y="460" class="text-small" fill="#cbd5e1">Apr 2025</text>
+    <text x="330" y="450" class="text-small" fill="#94a3b8">Upcoming</text>
+
+    <!-- Milestone 6 - Pending -->
+    <circle cx="40" cy="500" r="12" fill="#e2e8f0"/>
+    <text x="65" y="500" class="text-small" fill="#94a3b8">Handover</text>
+    <text x="65" y="515" class="text-small" fill="#cbd5e1">Dec 2026</text>
+    <text x="330" y="505" class="text-small" fill="#94a3b8">Upcoming</text>
+  </g>
+
+  <!-- ==================== CTA VARIATIONS ==================== -->
+  <g transform="translate(870, 1200)">
+    <text x="200" y="0" text-anchor="middle" class="text-screen">CTA VARIATIONS</text>
+
+    <!-- Frame -->
+    <rect x="0" y="20" width="400" height="500" rx="8" class="frame"/>
+
+    <!-- Primary CTAs -->
+    <text x="20" y="55" class="text-title">Primary CTAs (High Priority)</text>
+
+    <rect x="20" y="70" width="170" height="45" rx="8" class="btn-primary"/>
+    <text x="55" y="98" class="text-small" font-weight="bold">💬 WhatsApp Inquiry</text>
+
+    <rect x="200" y="70" width="170" height="45" rx="8" class="btn-primary"/>
+    <text x="235" y="98" class="text-small" font-weight="bold">📅 Schedule Visit</text>
+
+    <!-- Secondary CTAs -->
+    <text x="20" y="145" class="text-title">Secondary CTAs</text>
+
+    <rect x="20" y="160" width="170" height="45" rx="8" class="btn-secondary"/>
+    <text x="60" y="188" class="text-small" fill="#ffffff">📞 Call Agent</text>
+
+    <rect x="200" y="160" width="170" height="45" rx="8" class="btn-secondary"/>
+    <text x="235" y="188" class="text-small" fill="#ffffff">📊 ROI Calculator</text>
+
+    <!-- Tertiary CTAs -->
+    <text x="20" y="235" class="text-title">Tertiary CTAs</text>
+
+    <rect x="20" y="250" width="170" height="45" rx="8" class="btn-outline"/>
+    <text x="55" y="278" class="text-small">♡ Add to Watchlist</text>
+
+    <rect x="200" y="250" width="170" height="45" rx="8" class="btn-outline"/>
+    <text x="245" y="278" class="text-small">↗ Share Project</text>
+
+    <!-- Sticky Footer CTA -->
+    <text x="20" y="330" class="text-title">Sticky Footer CTA (Mobile)</text>
+
+    <rect x="20" y="345" width="360" height="60" rx="0" fill="#ffffff" stroke="#e2e8f0"/>
+    <rect x="30" y="355" width="105" height="40" rx="6" class="btn-primary"/>
+    <text x="50" y="380" class="text-small" font-weight="bold">💬 WhatsApp</text>
+    <rect x="145" y="355" width="105" height="40" rx="6" class="btn-secondary"/>
+    <text x="170" y="380" class="text-small" fill="#ffffff">📅 Visit</text>
+    <rect x="260" y="355" width="105" height="40" rx="6" class="btn-outline"/>
+    <text x="290" y="380" class="text-small">📞 Call</text>
+
+    <!-- Floating AI Button -->
+    <text x="20" y="435" class="text-title">Floating AI Advisor</text>
+
+    <rect x="20" y="450" width="360" height="60" rx="8" fill="#f8fafc"/>
+    <rect x="280" y="460" width="80" height="40" rx="20" class="btn-primary"/>
+    <text x="295" y="485" class="text-small" font-weight="bold">🤖 AI Help</text>
+    <text x="30" y="485" class="text-small" fill="#64748b">Always visible on scroll</text>
+  </g>
+
+  <!-- ==================== LEGEND ==================== -->
+  <g transform="translate(1310, 1200)">
+    <text x="200" y="0" text-anchor="middle" class="text-screen">LEGEND & ANNOTATIONS</text>
+
+    <!-- Frame -->
+    <rect x="0" y="20" width="400" height="500" rx="8" class="frame"/>
+
+    <!-- Color Legend -->
+    <text x="20" y="55" class="text-title">Color Coding</text>
+
+    <rect x="20" y="70" width="30" height="20" rx="4" class="btn-primary"/>
+    <text x="60" y="85" class="text-label">Primary Action (CTA)</text>
+
+    <rect x="20" y="100" width="30" height="20" rx="4" class="btn-secondary"/>
+    <text x="60" y="115" class="text-label">Secondary Action</text>
+
+    <rect x="20" y="130" width="30" height="20" rx="4" class="btn-outline"/>
+    <text x="60" y="145" class="text-label">Tertiary / Optional Action</text>
+
+    <rect x="20" y="160" width="30" height="20" rx="4" fill="#22c55e"/>
+    <text x="60" y="175" class="text-label">Success / Verified / Complete</text>
+
+    <rect x="20" y="190" width="30" height="20" rx="4" fill="#f59e0b"/>
+    <text x="60" y="205" class="text-label">Highlight / In Progress / Selected</text>
+
+    <rect x="20" y="220" width="30" height="20" rx="4" fill="#ef4444"/>
+    <text x="60" y="235" class="text-label">Delete / Remove / Alert</text>
+
+    <!-- Element Legend -->
+    <text x="20" y="275" class="text-title">UI Elements</text>
+
+    <rect x="20" y="290" width="80" height="25" rx="4" class="placeholder"/>
+    <text x="110" y="307" class="text-label">Placeholder / Input Field</text>
+
+    <rect x="20" y="325" width="80" height="25" rx="4" fill="#f0fdf4" stroke="#22c55e"/>
+    <text x="110" y="342" class="text-label">Trust Badge / Verification</text>
+
+    <rect x="20" y="360" width="80" height="25" rx="4" fill="#fef3c7"/>
+    <text x="110" y="377" class="text-label">Highlight / Alert Box</text>
+
+    <!-- User Flow Arrows -->
+    <text x="20" y="415" class="text-title">User Flow</text>
+
+    <path d="M 20 435 L 80 435" class="flow-arrow"/>
+    <text x="110" y="440" class="text-label">User navigation flow</text>
+
+    <text x="20" y="475" class="annotation">← Annotation text</text>
+    <text x="150" y="475" class="text-label">Designer notes</text>
+  </g>
+
+</svg>

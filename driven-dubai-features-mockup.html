@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driven Properties - Dubai Premium Features Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: {
+                            50: '#fdfcfb',
+                            100: '#faf8f5',
+                            200: '#f5f2ed',
+                        },
+                        warm: {
+                            100: '#f5f5f4',
+                            200: '#e7e5e4',
+                            300: '#d6d3d1',
+                            400: '#a8a29e',
+                            500: '#78716c',
+                            600: '#57534e',
+                            700: '#44403c',
+                            800: '#292524',
+                            900: '#1c1917'
+                        },
+                        accent: {
+                            gold: '#d4a574',
+                            'gold-dark': '#b8935f',
+                        }
+                    },
+                    fontFamily: {
+                        lato: ['Lato', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Lato', sans-serif;
+            background: #fdfcfb;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .gradient-gold {
+            background: linear-gradient(135deg, #d4a574 0%, #b8935f 100%);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #f5f5f4 25%, #e7e5e4 50%, #f5f5f4 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-cream-50">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-warm-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-8">
+                    <h1 class="text-2xl font-bold text-warm-800">Driven Properties</h1>
+                    <div class="hidden md:flex items-center gap-6">
+                        <button class="text-warm-600 hover:text-warm-800 font-medium">Market Heatmap</button>
+                        <button class="text-warm-600 hover:text-warm-800 font-medium">My Portfolio</button>
+                        <button class="text-warm-600 hover:text-warm-800 font-medium">Compare</button>
+                    </div>
+                </div>
+                <button class="bg-warm-800 text-white px-6 py-2 rounded-lg font-semibold hover:bg-warm-700">
+                    Concierge
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Feature Showcase Container -->
+    <div class="max-w-7xl mx-auto px-6 py-8">
+
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-warm-800 mb-2">Dubai Premium Features Mockup</h2>
+            <p class="text-warm-500">Interactive prototypes of all proposed features with realistic data</p>
+        </div>
+
+        <!-- Feature Navigation Tabs -->
+        <div class="bg-white rounded-2xl border border-warm-200 p-2 mb-8 flex flex-wrap gap-2">
+            <button onclick="showFeature('masterplan')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="masterplan">
+                3D Masterplan
+            </button>
+            <button onclick="showFeature('staging')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="staging">
+                Virtual Staging
+            </button>
+            <button onclick="showFeature('views')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="views">
+                Time of Day Views
+            </button>
+            <button onclick="showFeature('proximity')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="proximity">
+                Proximity Engine
+            </button>
+            <button onclick="showFeature('dld')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="dld">
+                DLD Data
+            </button>
+            <button onclick="showFeature('roi')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="roi">
+                ROI Calculator
+            </button>
+            <button onclick="showFeature('construction')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="construction">
+                Construction Tracker
+            </button>
+            <button onclick="showFeature('vault')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="vault">
+                No-Spam Vault
+            </button>
+            <button onclick="showFeature('roadmap')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="roadmap">
+                Investment Roadmap
+            </button>
+            <button onclick="showFeature('chat')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="chat">
+                Expert Chat
+            </button>
+            <button onclick="showFeature('comparison')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="comparison">
+                Comparison Tray
+            </button>
+            <button onclick="showFeature('heatmap')" class="feature-tab px-4 py-2 rounded-lg font-medium hover:bg-cream-50 transition-all" data-feature="heatmap">
+                Market Heatmap
+            </button>
+        </div>
+
+        <!-- Feature Display Area -->
+        <div id="featureDisplay" class="bg-white rounded-2xl border border-warm-200 p-8 min-h-[600px]">
+            <!-- Features will be loaded here -->
+            <div class="text-center py-24">
+                <svg class="w-16 h-16 mx-auto mb-4 text-warm-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
+                </svg>
+                <p class="text-warm-500 font-medium">Select a feature from the tabs above to view the mockup</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Feature content templates
+        const features = {
+            masterplan: `
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-warm-800 mb-2">3D Masterplan Integration</h3>
+                            <p class="text-warm-500">Explore the property within the context of its mega-project</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="px-4 py-2 bg-warm-800 text-white rounded-lg font-medium hover:bg-warm-700">Full Screen</button>
+                            <button class="px-4 py-2 border border-warm-200 rounded-lg font-medium hover:bg-cream-50">Share View</button>
+                        </div>
+                    </div>
+
+                    <!-- 3D Viewer Mockup -->
+                    <div class="relative bg-gradient-to-br from-warm-100 to-cream-100 rounded-xl overflow-hidden mb-6" style="height: 500px;">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <svg class="w-24 h-24 mx-auto mb-4 text-accent-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                                <p class="text-xl font-bold text-warm-800 mb-2">Interactive 3D Masterplan</p>
+                                <p class="text-warm-500 mb-4">Emaar Beachfront | Downtown Dubai Skyline View</p>
+                                <div class="inline-block px-4 py-2 bg-white rounded-lg shadow-md">
+                                    <span class="text-sm text-warm-600">🎮 Click and drag to rotate | Scroll to zoom</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3D Control Overlay -->
+                        <div class="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3">
+                            <div class="flex gap-2">
+                                <button class="p-2 hover:bg-cream-50 rounded">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                </button>
+                                <button class="p-2 hover:bg-cream-50 rounded">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+                                </button>
+                                <button class="p-2 hover:bg-cream-50 rounded bg-accent-gold text-white">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Points of Interest -->
+                        <div class="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-4 max-w-xs">
+                            <h4 class="font-bold text-warm-800 mb-3 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-accent-gold" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg>
+                                Nearby Landmarks
+                            </h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-warm-600">Burj Al Arab</span>
+                                    <span class="font-semibold text-accent-gold">2.1 km</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-warm-600">Dubai Marina Mall</span>
+                                    <span class="font-semibold text-accent-gold">850 m</span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-warm-600">JBR Beach</span>
+                                    <span class="font-semibold text-accent-gold">1.5 km</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project Info -->
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="bg-cream-50 rounded-xl p-4 border border-warm-200">
+                            <p class="text-xs text-warm-500 mb-1">Total Project Area</p>
+                            <p class="text-xl font-bold text-warm-800">2.5M sqft</p>
+                        </div>
+                        <div class="bg-cream-50 rounded-xl p-4 border border-warm-200">
+                            <p class="text-xs text-warm-500 mb-1">Your Unit Location</p>
+                            <p class="text-xl font-bold text-warm-800">Tower B, Floor 28</p>
+                        </div>
+                        <div class="bg-cream-50 rounded-xl p-4 border border-warm-200">
+                            <p class="text-xs text-warm-500 mb-1">View Orientation</p>
+                            <p class="text-xl font-bold text-warm-800">North-East (Sea View)</p>
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            staging: `
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-warm-800 mb-2">Virtual Staging Slider</h3>
+                            <p class="text-warm-500">Visualize the potential of your shell-and-core unit</p>
+                        </div>
+                    </div>
+
+                    <!-- Before/After Slider -->
+                    <div class="relative bg-warm-100 rounded-xl overflow-hidden mb-6" style="height: 450px;">
+                        <div class="absolute inset-0 grid grid-cols-2">
+                            <div class="bg-gradient-to-r from-warm-200 to-warm-100 flex items-center justify-center border-r-4 border-accent-gold">
+                                <div class="text-center">
+                                    <p class="text-warm-400 mb-2">Before</p>
+                                    <p class="text-lg font-bold text-warm-600">Empty Shell</p>
+                                </div>
+                            </div>
+                            <div class="bg-gradient-to-l from-cream-200 to-cream-100 flex items-center justify-center">
+                                <div class="text-center">
+                                    <p class="text-warm-400 mb-2">After</p>
+                                    <p class="text-lg font-bold text-warm-800">Fully Furnished</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slider Handle -->
+                        <div class="absolute top-0 bottom-0 left-1/2 flex items-center justify-center pointer-events-none">
+                            <div class="bg-accent-gold rounded-full p-3 shadow-xl">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Furniture Style Selector -->
+                    <div class="mb-6">
+                        <h4 class="font-semibold text-warm-800 mb-3">Select Furniture Style</h4>
+                        <div class="grid grid-cols-3 gap-4">
+                            <button class="group border-2 border-accent-gold bg-accent-gold/5 rounded-xl p-4 hover:bg-accent-gold/10 transition-all">
+                                <div class="w-full h-24 bg-gradient-to-br from-warm-200 to-cream-100 rounded-lg mb-3 flex items-center justify-center">
+                                    <span class="text-2xl">🏢</span>
+                                </div>
+                                <p class="font-semibold text-warm-800">Modern</p>
+                                <p class="text-xs text-warm-500 mt-1">Contemporary & Sleek</p>
+                            </button>
+                            <button class="group border-2 border-warm-200 rounded-xl p-4 hover:border-accent-gold hover:bg-accent-gold/5 transition-all">
+                                <div class="w-full h-24 bg-gradient-to-br from-warm-100 to-cream-50 rounded-lg mb-3 flex items-center justify-center">
+                                    <span class="text-2xl">👑</span>
+                                </div>
+                                <p class="font-semibold text-warm-800">Classic</p>
+                                <p class="text-xs text-warm-500 mt-1">Elegant & Timeless</p>
+                            </button>
+                            <button class="group border-2 border-warm-200 rounded-xl p-4 hover:border-accent-gold hover:bg-accent-gold/5 transition-all">
+                                <div class="w-full h-24 bg-gradient-to-br from-cream-100 to-warm-50 rounded-lg mb-3 flex items-center justify-center">
+                                    <span class="text-2xl">✨</span>
+                                </div>
+                                <p class="font-semibold text-warm-800">Minimalist</p>
+                                <p class="text-xs text-warm-500 mt-1">Clean & Simple</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Estimated Costs -->
+                    <div class="bg-cream-50 rounded-xl p-6 border border-warm-200">
+                        <h4 class="font-semibold text-warm-800 mb-4">Estimated Furnishing Cost (Modern Style)</h4>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div>
+                                <p class="text-xs text-warm-500 mb-1">Basic Package</p>
+                                <p class="text-2xl font-bold text-warm-800">AED 85K</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-warm-500 mb-1">Premium Package</p>
+                                <p class="text-2xl font-bold text-accent-gold">AED 150K</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-warm-500 mb-1">Luxury Package</p>
+                                <p class="text-2xl font-bold text-warm-800">AED 280K</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            views: `
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-warm-800 mb-2">Golden Hour & Night Views</h3>
+                            <p class="text-warm-500">Experience your view at different times of day</p>
+                        </div>
+                    </div>
+
+                    <!-- Time of Day Selector -->
+                    <div class="bg-gradient-to-r from-blue-100 via-orange-100 to-purple-900 rounded-xl p-1 mb-6">
+                        <div class="bg-white rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-4">
+                                <button onclick="changeView('morning')" class="flex-1 px-4 py-3 rounded-lg font-medium transition-all view-btn" data-time="morning">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <span class="text-2xl">🌅</span>
+                                        <span>Morning</span>
+                                    </div>
+                                    <p class="text-xs text-warm-500 mt-1">6:00 AM</p>
+                                </button>
+                                <button onclick="changeView('golden')" class="flex-1 px-4 py-3 rounded-lg font-medium transition-all view-btn bg-accent-gold text-white" data-time="golden">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <span class="text-2xl">🌇</span>
+                                        <span>Golden Hour</span>
+                                    </div>
+                                    <p class="text-xs text-white/80 mt-1">6:30 PM</p>
+                                </button>
+                                <button onclick="changeView('night')" class="flex-1 px-4 py-3 rounded-lg font-medium transition-all view-btn" data-time="night">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <span class="text-2xl">🌃</span>
+                                        <span>Night</span>
+                                    </div>
+                                    <p class="text-xs text-warm-500 mt-1">9:00 PM</p>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- View Display -->
+                    <div id="viewDisplay" class="relative bg-gradient-to-br from-orange-400 via-pink-400 to-purple-600 rounded-xl overflow-hidden mb-6" style="height: 400px;">
+                        <div class="absolute inset-0 flex items-center justify-center text-white">
+                            <div class="text-center">
+                                <p class="text-3xl font-bold mb-2">Golden Hour View</p>
+                                <p class="text-white/80 mb-4">Burj Khalifa & Downtown Dubai</p>
+                                <div class="flex items-center justify-center gap-8 text-sm">
+                                    <div>
+                                        <p class="text-white/60">Temperature</p>
+                                        <p class="font-bold">32°C</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-white/60">Visibility</p>
+                                        <p class="font-bold">Excellent</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-white/60">Lighting</p>
+                                        <p class="font-bold">Perfect</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- View Annotation -->
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <div class="bg-white/95 backdrop-blur-sm rounded-lg p-4">
+                                <p class="text-sm text-warm-600 mb-2">
+                                    <strong>View Highlights:</strong> Unobstructed panoramic views of Burj Khalifa, Dubai Fountain, and The Dubai Mall. Perfect sunset views from your private balcony.
+                                </p>
+                                <div class="flex gap-2">
+                                    <span class="px-3 py-1 bg-accent-gold text-white text-xs rounded-full">Premium View</span>
+                                    <span class="px-3 py-1 bg-warm-100 text-warm-600 text-xs rounded-full">North-East Facing</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- View Features -->
+                    <div class="grid md:grid-cols-4 gap-4">
+                        <div class="bg-cream-50 rounded-xl p-4 border border-warm-200 text-center">
+                            <p class="text-2xl mb-2">🏢</p>
+                            <p class="font-semibold text-warm-800">Burj Khalifa</p>
+                            <p class="text-xs text-warm-500 mt-1">Direct View</p>
+                        </div>
+                        <div class="bg-cream-50 rounded-xl p-4 border border-warm-200 text-center">
+                            <p class="text-2xl mb-2">⛲</p>
+                            <p class="font-semibold text-warm-800">Dubai Fountain</p>
+                            <p class="text-xs text-warm-500 mt-1">Show Visible</p>
+                        </div>
+                        <div class="bg-cream-50 rounded-xl p-4 border border-warm-200 text-center">
+                            <p class="text-2xl mb-2">🌊</p>
+                            <p class="font-semibold text-warm-800">Arabian Gulf</p>
+                            <p class="text-xs text-warm-500 mt-1">Partial View</p>
+                        </div>
+                        <div class="bg-cream-50 rounded-xl p-4 border border-warm-200 text-center">
+                            <p class="text-2xl mb-2">🏙️</p>
+                            <p class="font-semibold text-warm-800">Skyline</p>
+                            <p class="text-xs text-warm-500 mt-1">360° Panoramic</p>
+                        </div>
+                    </div>
+                </div>
+            `,
+
+            proximity: `
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-warm-800 mb-2">Custom Proximity Engine</h3>
+                            <p class="text-warm-500">Calculate distances to your specific locations</p>
+                        </div>
+                    </div>
+
+                    <!-- Map Mockup -->
+                    <div class="relative bg-cream-100 rounded-xl overflow-hidden mb-6" style="height: 400px;">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <svg class="w-24 h-24 mx-auto mb-4 text-accent-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                                </svg>
+                                <p class="text-xl font-bold text-warm-800">Interactive Route Map</p>
+                            </div>
+                        </div>
+
+                        <!-- Map Pins -->
+                        <div class="absolute top-1/4 left-1/3 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-xs font-bold shadow-lg">
+                            📍
+                        </div>
+                        <div class="absolute top-1/2 right-1/4 bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-xs font-bold shadow-lg">
+                            🏢
+                        </div>
+                        <div class="absolute bottom-1/4 left-1/2 bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-xs font-bold shadow-lg">
+                            🏫
+                        </div>
+                    </div>
+
+                    <!-- Custom Location Input -->
+                    <div class="bg-cream-50 rounded-xl p-6 border border-warm-200 mb-6">
+                        <h4 class="font-semibold text-warm-800 mb-4">Add Your Custom Location</h4>
+                        <div class="grid md:grid-cols-2 gap-4 mb-4">
+                            <input type="text" placeholder="Office address..." class="px-4 py-3 border border-warm-200 rounded-lg focus:border-accent-gold focus:outline-none">
+                            <input type="text" placeholder="Kids' school..." class="px-4 py-3 border border-warm-200 rounded-lg focus:border-accent-gold focus:outline-none">
+                        </div>
+                        <button class="w-full bg-warm-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-warm-700">
+                            Calculate Routes
+                        </button>
+                    </div>
+
+                    <!-- Distance Table -->
+                    <div class="bg-white rounded-xl border border-warm-200 overflow-hidden">
+                        <table class="w-full">
+                            <thead class="bg-cream-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-semibold text-warm-600 uppercase">Location</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold text-warm-600 uppercase">Distance</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold text-warm-600 uppercase">By Car</th>
+                                    <th class="px-6 py-3 text-center text-xs font-semibold text-warm-600 uppercase">By Metro</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-warm-200">
+                                <tr class="hover:bg-cream-50">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-xl">✈️</span>
+                                            <span class="font-medium text-warm-800">DXB Airport</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center font-semibold text-warm-800">18.5 km</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">22 min</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">45 min</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-cream-50">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-xl">🏢</span>
+                                            <span class="font-medium text-warm-800">Burj Khalifa</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center font-semibold text-warm-800">3.2 km</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">8 min</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">12 min</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-cream-50 bg-accent-gold/5">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-xl">💼</span>
+                                            <span class="font-medium text-warm-800">Your Office (DIFC)</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center font-semibold text-accent-gold">5.8 km</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="px-3 py-1 bg-accent-gold text-white rounded-full text-sm font-medium">12 min</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="px-3 py-1 bg-accent-gold/20 text-accent-gold rounded-full text-sm font-medium">18 min</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-cream-50 bg-accent-gold/5">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-xl">🏫</span>
+                                            <span class="font-medium text-warm-800">GEMS School</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center font-semibold text-accent-gold">4.1 km</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="px-3 py-1 bg-accent-gold text-white rounded-full text-sm font-medium">9 min</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center text-warm-400">—</td>
+                                </tr>
+                                <tr class="hover:bg-cream-50">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-xl">🛍️</span>
+                                            <span class="font-medium text-warm-800">Dubai Mall</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center font-semibold text-warm-800">2.5 km</td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">6 min</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">10 min</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `,
+
+            // Continue with remaining features in next part...
+        };
+
+        // Feature switching function
+        function showFeature(featureName) {
+            const display = document.getElementById('featureDisplay');
+            const content = features[featureName];
+
+            if (content) {
+                display.innerHTML = content;
+
+                // Update active tab
+                document.querySelectorAll('.feature-tab').forEach(tab => {
+                    tab.classList.remove('bg-warm-800', 'text-white');
+                    tab.classList.add('text-warm-600');
+                });
+
+                const activeTab = document.querySelector(\`[data-feature="\${featureName}"]\`);
+                if (activeTab) {
+                    activeTab.classList.add('bg-warm-800', 'text-white');
+                    activeTab.classList.remove('text-warm-600');
+                }
+            } else {
+                display.innerHTML = '<div class="text-center py-24"><p class="text-warm-500">Feature mockup coming soon...</p></div>';
+            }
+        }
+
+        // Initialize with first feature
+        window.onload = () => showFeature('masterplan');
+    </script>
+</body>
+</html>
