@@ -2793,62 +2793,22 @@
 
                     {/* ════════ City Comparison Banner ════════ */}
                     <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
-                        <div className="rounded-2xl overflow-hidden flex items-center" style={{ background: '#EDE0CD', minHeight: '190px' }}>
-                            <div className="flex items-center justify-between w-full px-6 md:px-10 py-8 gap-4">
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-[#1c1c1a] text-lg md:text-[22px] font-semibold leading-snug mb-5 max-w-md">
+                        <div className="rounded-[20px] overflow-hidden relative" style={{ background: '#EDE0CD' }}>
+                            <div className="flex items-center justify-between w-full px-6 md:px-10 py-5 gap-4" style={{ minHeight: '235px' }}>
+                                <div className="flex flex-col gap-[16px] justify-center relative z-10">
+                                    <p className="text-[#292929] text-lg md:text-[24px] font-semibold leading-normal max-w-[500px]" style={{ fontFamily: "'Lato', sans-serif" }}>
                                         Find out how Dubai compares to London, New York, and Singapore in our groundbreaking Tier-1 City Index!
                                     </p>
-                                    <button className="flex items-center gap-2.5 px-5 py-3 bg-[#1c1c1a] text-white rounded-full text-sm font-semibold hover:bg-black transition-colors">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
-                                        Full Rankings & Analysis
-                                    </button>
+                                    {/* Button with outer white wrapper + inner black pill */}
+                                    <div className="bg-white border border-[#f3e7d8] rounded-[32px] p-[8px] w-[320px]">
+                                        <button className="w-full flex items-center justify-center gap-[8px] bg-[#161717] text-white rounded-[24px] px-[32px] py-[8px] font-bold text-[16px] leading-[24px] hover:bg-black transition-colors" style={{ boxShadow: '0px 1px 4px 2px rgba(0,0,0,0.25)' }}>
+                                            <svg className="w-[24px] h-[24px] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10" /></svg>
+                                            Full Rankings & Analysis
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="hidden md:block flex-shrink-0" style={{ width: '260px', height: '170px' }}>
-                                    <svg viewBox="0 0 260 170" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                                        <defs>
-                                            <linearGradient id="cBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#F9C4A0"/><stop offset="100%" stopColor="#EDE0CD"/></linearGradient>
-                                            <linearGradient id="cB1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#C8462A"/><stop offset="100%" stopColor="#7A1E0A"/></linearGradient>
-                                            <linearGradient id="cB2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#E07040"/><stop offset="100%" stopColor="#A83010"/></linearGradient>
-                                            <linearGradient id="cB3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#EE9060"/><stop offset="100%" stopColor="#C04020"/></linearGradient>
-                                        </defs>
-                                        <rect width="260" height="170" fill="url(#cBg)"/>
-                                        {/* Water reflection */}
-                                        <rect x="0" y="152" width="260" height="18" fill="#C9A07A" opacity="0.35" rx="0"/>
-                                        {/* Far buildings */}
-                                        <rect x="5" y="105" width="14" height="50" fill="url(#cB3)" opacity="0.5" rx="1"/>
-                                        <rect x="22" y="92" width="13" height="63" fill="url(#cB2)" opacity="0.5" rx="1"/>
-                                        {/* Building cluster left */}
-                                        <rect x="38" y="88" width="15" height="67" fill="url(#cB3)" rx="1"/>
-                                        <rect x="36" y="98" width="19" height="57" fill="url(#cB3)" rx="1"/>
-                                        {/* Building cluster center-left */}
-                                        <rect x="62" y="72" width="18" height="83" fill="url(#cB2)" rx="1"/>
-                                        <rect x="60" y="82" width="22" height="73" fill="url(#cB2)" rx="1"/>
-                                        {/* Burj Khalifa - tall center spire */}
-                                        <rect x="121" y="15" width="10" height="140" fill="url(#cB1)" rx="1"/>
-                                        <rect x="118" y="40" width="16" height="115" fill="url(#cB1)" rx="1"/>
-                                        <rect x="114" y="65" width="24" height="90" fill="url(#cB1)" rx="1"/>
-                                        <polygon points="121,5 131,5 126,0" fill="#A03020"/>
-                                        {/* Building right of Burj */}
-                                        <rect x="144" y="62" width="18" height="93" fill="url(#cB2)" rx="1"/>
-                                        <rect x="142" y="78" width="22" height="77" fill="url(#cB2)" rx="1"/>
-                                        {/* Building far right-center */}
-                                        <rect x="172" y="78" width="16" height="77" fill="url(#cB3)" rx="1"/>
-                                        <rect x="170" y="88" width="20" height="67" fill="url(#cB3)" rx="1"/>
-                                        {/* Sail-shaped building (Burj Al Arab) */}
-                                        <path d="M200,155 L200,58 Q213,28 224,58 L224,155 Z" fill="url(#cB2)"/>
-                                        {/* Far right */}
-                                        <rect x="230" y="95" width="14" height="60" fill="url(#cB3)" opacity="0.6" rx="1"/>
-                                        <rect x="246" y="108" width="12" height="47" fill="url(#cB2)" opacity="0.5" rx="1"/>
-                                        {/* Ground */}
-                                        <rect x="0" y="153" width="260" height="4" fill="#B8906A" opacity="0.5"/>
-                                        {/* Subtle window lights */}
-                                        <rect x="123" y="80" width="2" height="2" fill="rgba(255,240,180,0.5)"/>
-                                        <rect x="127" y="80" width="2" height="2" fill="rgba(255,240,180,0.5)"/>
-                                        <rect x="123" y="92" width="2" height="2" fill="rgba(255,240,180,0.5)"/>
-                                        <rect x="127" y="92" width="2" height="2" fill="rgba(255,240,180,0.5)"/>
-                                        <rect x="123" y="104" width="2" height="2" fill="rgba(255,240,180,0.4)"/>
-                                    </svg>
+                                <div className="hidden md:block flex-shrink-0 relative" style={{ width: '307px', height: '201px' }}>
+                                    <img src="Modal Assets/analysis dubai banner illustration.svg" alt="Dubai skyline" className="w-full h-full object-contain object-bottom" />
                                 </div>
                             </div>
                         </div>
