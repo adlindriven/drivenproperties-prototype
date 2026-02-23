@@ -5609,10 +5609,11 @@
                                 <MapView projects={mockProjects} onSelectProject={onSelectProject} hoveredProject={selectedMapProject} onHoverProject={setSelectedMapProject} />
                             </div>
 
-                            {/* ── Floating Search Bar (over the map) ── */}
+                            {/* ── Floating Search Bar (fixed below nav, 12px gap) ── */}
                             <div
                                 ref={floatingSearchRef}
-                                className="absolute top-[16px] left-[16px] right-[16px] z-20"
+                                className="fixed left-[16px] right-[16px] z-40"
+                                style={{ top: '78px' }}
                             >
                                 <div
                                     className="flex items-center gap-[8px] px-[16px] py-[8px] rounded-[37px]"
