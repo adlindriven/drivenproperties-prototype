@@ -4997,10 +4997,18 @@
 
             // Track desktop vs mobile for responsive layout
             const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+            const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
             React.useEffect(() => {
-                const onResize = () => setIsDesktop(window.innerWidth >= 1024);
+                const onResize = () => {
+                    setIsDesktop(window.innerWidth >= 1024);
+                    setViewportHeight(window.innerHeight);
+                };
                 window.addEventListener('resize', onResize);
-                return () => window.removeEventListener('resize', onResize);
+                window.addEventListener('orientationchange', () => setTimeout(onResize, 150));
+                return () => {
+                    window.removeEventListener('resize', onResize);
+                    window.removeEventListener('orientationchange', onResize);
+                };
             }, []);
 
             // Calculate pagination
@@ -5602,7 +5610,7 @@
                         </div>
                     ) : (
                         /* ══ MOBILE: Full-screen map + floating search bar + bottom drawer ══ */
-                        <div ref={mapContainerRef} className="relative" style={{ height: 'calc(100vh - 66px)', overflow: 'hidden' }}>
+                        <div ref={mapContainerRef} className="relative" style={{ height: `${viewportHeight - 66}px`, overflow: 'hidden' }}>
 
                             {/* ── Full-screen Map ── */}
                             <div className="absolute inset-0 z-0">
