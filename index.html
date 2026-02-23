@@ -329,6 +329,12 @@
             .price-full    { display: none; }
         }
 
+        /* Filter modal entrance animation */
+        @keyframes filterModalIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.95) translateY(20px); }
+            to   { opacity: 1; transform: translate(-50%, -50%) scale(1) translateY(0); }
+        }
+
         /* Airbnb-style Map Markers */
         .leaflet-container {
             font-family: 'Lato', sans-serif !important;
@@ -5055,6 +5061,83 @@
             const [minSize, setMinSize] = useState('');
             const [maxSize, setMaxSize] = useState('');
 
+            // ── Mobile map drawer state ──
+            const [showMobileFilterModal, setShowMobileFilterModal] = useState(false);
+            const DRAWER_COLLAPSED_HEIGHT = 220; // peek height in px
+            const [drawerHeight, setDrawerHeight] = useState(DRAWER_COLLAPSED_HEIGHT);
+            const [drawerExpanded, setDrawerExpanded] = useState(false);
+            const [isDraggingDrawer, setIsDraggingDrawer] = useState(false);
+            const touchStartYRef = React.useRef(0);
+            const touchStartHeightRef = React.useRef(DRAWER_COLLAPSED_HEIGHT);
+            const floatingSearchRef = React.useRef(null);
+            const mapContainerRef = React.useRef(null);
+
+            // Compute expanded height: container height - (search bar bottom + 16px gap)
+            const getExpandedHeight = () => {
+                const container = mapContainerRef.current;
+                const searchBar = floatingSearchRef.current;
+                if (container && searchBar) {
+                    const containerRect = container.getBoundingClientRect();
+                    const searchRect = searchBar.getBoundingClientRect();
+                    const ceiling = searchRect.bottom - containerRect.top + 16;
+                    return containerRect.height - ceiling;
+                }
+                return window.innerHeight * 0.65; // fallback
+            };
+
+            // Drawer touch handlers
+            const handleDrawerTouchStart = (e) => {
+                setIsDraggingDrawer(true);
+                touchStartYRef.current = e.touches[0].clientY;
+                touchStartHeightRef.current = drawerHeight;
+            };
+            const handleDrawerTouchMove = (e) => {
+                if (!isDraggingDrawer) return;
+                e.preventDefault();
+                const deltaY = touchStartYRef.current - e.touches[0].clientY; // positive = dragging up
+                const expandedH = getExpandedHeight();
+                const newHeight = Math.min(Math.max(touchStartHeightRef.current + deltaY, DRAWER_COLLAPSED_HEIGHT - 40), expandedH + 40);
+                setDrawerHeight(newHeight);
+            };
+            const handleDrawerTouchEnd = (e) => {
+                if (!isDraggingDrawer) return;
+                setIsDraggingDrawer(false);
+                const expandedH = getExpandedHeight();
+                const midPoint = (DRAWER_COLLAPSED_HEIGHT + expandedH) / 2;
+                // Snap based on velocity or position
+                const endY = e.changedTouches[0].clientY;
+                const velocity = touchStartYRef.current - endY; // positive = swipe up
+                if (drawerExpanded) {
+                    // Currently expanded → collapse if dragged down enough or fast swipe down
+                    if (velocity < -50 || drawerHeight < midPoint) {
+                        setDrawerHeight(DRAWER_COLLAPSED_HEIGHT);
+                        setDrawerExpanded(false);
+                    } else {
+                        setDrawerHeight(expandedH);
+                        setDrawerExpanded(true);
+                    }
+                } else {
+                    // Currently collapsed → expand if dragged up enough or fast swipe up
+                    if (velocity > 50 || drawerHeight > midPoint) {
+                        setDrawerHeight(expandedH);
+                        setDrawerExpanded(true);
+                    } else {
+                        setDrawerHeight(DRAWER_COLLAPSED_HEIGHT);
+                        setDrawerExpanded(false);
+                    }
+                }
+            };
+            const handleDrawerTap = () => {
+                const expandedH = getExpandedHeight();
+                if (drawerExpanded) {
+                    setDrawerHeight(DRAWER_COLLAPSED_HEIGHT);
+                    setDrawerExpanded(false);
+                } else {
+                    setDrawerHeight(expandedH);
+                    setDrawerExpanded(true);
+                }
+            };
+
             const mainTabs = [
                 { id: 'buy', label: 'Buy' },
                 { id: 'rent', label: 'Rent' },
@@ -5080,7 +5163,8 @@
                 <div className="min-h-screen bg-white">
 
                     {/* ── Advanced Search & Filter Bar — Figma Make Design ── */}
-                    <div className="bg-[#f8f7f4] border-b border-[rgba(216,206,190,0.32)]">
+                    {/* Hidden on mobile when in map view (replaced by floating search bar) */}
+                    <div className={`bg-[#f8f7f4] border-b border-[rgba(216,206,190,0.32)] ${!isDesktop && viewMode === 'map' ? 'hidden' : ''}`}>
                         <div className="max-w-7xl mx-auto px-6 pt-5 pb-4">
                             <div className="flex flex-col gap-[16px]">
 
@@ -5337,7 +5421,8 @@
                     </div>
 
                     {/* ── Title Bar: Heading + View/Sort controls ── */}
-                    <div className="bg-white border-b border-warm-100">
+                    {/* Hidden on mobile when in map view */}
+                    <div className={`bg-white border-b border-warm-100 ${!isDesktop && viewMode === 'map' ? 'hidden' : ''}`}>
                         <div className="max-w-7xl mx-auto px-6 py-4">
                             <div className="flex items-center justify-between">
                                 <div>
@@ -5466,54 +5551,17 @@
                                 </div>
                             )}
                         </div>
-                    ) : (
-                        /* Airbnb-style: mobile = full-screen map on top + bottom sheet list | desktop = side-by-side split */
-                        <div className="flex flex-col lg:flex-row h-[calc(100vh-200px)]">
-
-                            {/* ── Map Panel — mobile: top (order 1, 48% height) | desktop: right (order 3) ── */}
+                    ) : isDesktop ? (
+                        /* ══ DESKTOP: Side-by-side split (unchanged) ══ */
+                        <div className="flex flex-row h-[calc(100vh-200px)]">
+                            {/* List Panel — left */}
                             <div
-                                className="order-1 lg:order-3 flex-shrink-0"
-                                style={isDesktop
-                                    ? { width: `${100 - splitPercentage}%`, height: '100%', position: 'sticky', top: 0 }
-                                    : { height: '48%' }
-                                }
+                                className="overflow-y-auto bg-white flex flex-col flex-shrink-0"
+                                style={{ width: `${splitPercentage}%`, minWidth: '260px', height: '100%' }}
                             >
-                                <MapView
-                                    projects={mockProjects}
-                                    onSelectProject={onSelectProject}
-                                    hoveredProject={selectedMapProject}
-                                    onHoverProject={setSelectedMapProject}
-                                />
-                            </div>
-
-                            {/* ── Mobile drag handle (between map and list) ── */}
-                            <div className="lg:hidden order-2 flex-shrink-0 flex items-center justify-center bg-white border-t border-warm-100 cursor-ns-resize" style={{ height: '28px' }}>
-                                <div className="w-10 h-1.5 bg-[#ddd] rounded-full" />
-                            </div>
-
-                            {/* ── Desktop resizable divider (order 2) ── */}
-                            <div
-                                onMouseDown={handleMouseDown}
-                                className="hidden lg:flex order-2 w-1 bg-warm-100 hover:bg-warm-300 cursor-ew-resize transition-colors flex-shrink-0 items-center justify-center group"
-                            >
-                                <div className="w-1 h-10 rounded-full bg-warm-300 group-hover:bg-warm-500 group-hover:h-14 transition-all opacity-0 group-hover:opacity-100" />
-                            </div>
-
-                            {/* ── List Panel — mobile: bottom sheet (order 3, flex-1 scrollable) | desktop: left (order 1) ── */}
-                            <div
-                                className="overflow-y-auto bg-white flex flex-col order-3 lg:order-1 flex-shrink-0"
-                                style={isDesktop
-                                    ? { width: `${splitPercentage}%`, minWidth: '260px', height: '100%' }
-                                    : { flex: 1, minHeight: 0 }
-                                }
-                            >
-
-                                {/* Sticky result count header */}
                                 <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-warm-100 px-4 py-3 z-10 flex-shrink-0">
                                     <p className="text-sm font-semibold text-[#222]">{mockProjects.length} properties</p>
                                 </div>
-
-                                {/* Responsive auto-fill grid of PropertyCards with hover sync */}
                                 <div className="p-3 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))' }}>
                                     {currentProjects.map(project => (
                                         <div
@@ -5535,25 +5583,346 @@
                                         </div>
                                     ))}
                                 </div>
-
-                                {/* Compact pagination */}
                                 {totalPages > 1 && (
                                     <div className="flex items-center justify-center gap-3 py-4 px-4 border-t border-warm-100 flex-shrink-0">
-                                        <button
-                                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                            disabled={currentPage === 1}
-                                            className="px-3 py-1.5 rounded-lg border border-warm-200 text-sm text-driven-text disabled:opacity-40 hover:bg-cream-100 transition-all"
-                                        >Prev</button>
+                                        <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-3 py-1.5 rounded-lg border border-warm-200 text-sm text-driven-text disabled:opacity-40 hover:bg-cream-100 transition-all">Prev</button>
                                         <span className="text-sm text-warm-500 font-medium">{currentPage} / {totalPages}</span>
-                                        <button
-                                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                                            disabled={currentPage === totalPages}
-                                            className="px-3 py-1.5 rounded-lg border border-warm-200 text-sm text-driven-text disabled:opacity-40 hover:bg-cream-100 transition-all"
-                                        >Next</button>
+                                        <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="px-3 py-1.5 rounded-lg border border-warm-200 text-sm text-driven-text disabled:opacity-40 hover:bg-cream-100 transition-all">Next</button>
                                     </div>
                                 )}
                             </div>
+                            {/* Resizable divider */}
+                            <div onMouseDown={handleMouseDown} className="flex w-1 bg-warm-100 hover:bg-warm-300 cursor-ew-resize transition-colors flex-shrink-0 items-center justify-center group">
+                                <div className="w-1 h-10 rounded-full bg-warm-300 group-hover:bg-warm-500 group-hover:h-14 transition-all opacity-0 group-hover:opacity-100" />
+                            </div>
+                            {/* Map Panel — right */}
+                            <div style={{ width: `${100 - splitPercentage}%`, height: '100%', position: 'sticky', top: 0 }}>
+                                <MapView projects={mockProjects} onSelectProject={onSelectProject} hoveredProject={selectedMapProject} onHoverProject={setSelectedMapProject} />
+                            </div>
+                        </div>
+                    ) : (
+                        /* ══ MOBILE: Full-screen map + floating search bar + bottom drawer ══ */
+                        <div ref={mapContainerRef} className="relative" style={{ height: 'calc(100vh - 66px)', overflow: 'hidden' }}>
 
+                            {/* ── Full-screen Map ── */}
+                            <div className="absolute inset-0 z-0">
+                                <MapView projects={mockProjects} onSelectProject={onSelectProject} hoveredProject={selectedMapProject} onHoverProject={setSelectedMapProject} />
+                            </div>
+
+                            {/* ── Floating Search Bar (over the map) ── */}
+                            <div
+                                ref={floatingSearchRef}
+                                className="absolute top-[16px] left-[16px] right-[16px] z-20"
+                            >
+                                <div
+                                    className="flex items-center gap-[8px] px-[16px] py-[8px] rounded-[37px]"
+                                    style={{
+                                        background: 'rgba(255,255,255,0.88)',
+                                        backdropFilter: 'blur(12px)',
+                                        WebkitBackdropFilter: 'blur(12px)',
+                                        border: '1px solid rgba(180,180,180,0.32)',
+                                        boxShadow: '-9px 7px 25px rgba(153,153,153,0.1), -35px 28px 45px rgba(153,153,153,0.09)',
+                                    }}
+                                >
+                                    {/* List View Toggle */}
+                                    <button
+                                        onClick={() => setViewMode('list')}
+                                        className="flex-shrink-0 w-[24px] h-[24px] flex items-center justify-center"
+                                        title="Switch to List View"
+                                    >
+                                        <svg width="18" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+                                        </svg>
+                                    </button>
+
+                                    {/* Search Input */}
+                                    <div className="flex-1 bg-[#FFFBF6] border border-[#E7DCCC] rounded-[33px] h-[50px] px-[20px] flex items-center gap-[8px] min-w-0">
+                                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }}>
+                                            <circle cx="8" cy="8" r="6" stroke="#6C5F4C" strokeWidth="2" />
+                                            <path d="M12.5 12.5L17 17" stroke="#6C5F4C" strokeWidth="2" strokeLinecap="round" />
+                                        </svg>
+                                        <input
+                                            type="text"
+                                            placeholder="Search location"
+                                            value={locationSearch}
+                                            onChange={(e) => setLocationSearch(e.target.value)}
+                                            className="flex-1 bg-transparent outline-none text-[16px] placeholder:text-[rgba(0,0,0,0.59)] text-[rgba(0,0,0,0.8)] min-w-0"
+                                            style={{ border: 'none' }}
+                                        />
+                                    </div>
+
+                                    {/* Search Button */}
+                                    <button className="bg-black border border-[#C4AD8D] rounded-full p-[4px] hover:opacity-90 transition-opacity flex-shrink-0">
+                                        <div className="bg-black rounded-full p-[11px]">
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                <circle cx="6.5" cy="6.5" r="5" stroke="white" strokeWidth="1.5" />
+                                                <path d="M10.5 10.5L14 14" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                                            </svg>
+                                        </div>
+                                    </button>
+
+                                    {/* Filter Button */}
+                                    <button
+                                        onClick={() => setShowMobileFilterModal(true)}
+                                        className="flex-shrink-0 w-[24px] h-[24px] flex items-center justify-center"
+                                    >
+                                        <svg width="20" height="16" viewBox="0 0 20 16" fill="none">
+                                            <rect x="0" y="1" width="20" height="2" rx="1" fill="#0A0A0A" />
+                                            <rect x="0" y="7" width="14" height="2" rx="1" fill="#0A0A0A" />
+                                            <rect x="0" y="13" width="8" height="2" rx="1" fill="#0A0A0A" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* ── Bottom Drawer ── */}
+                            <div
+                                className="absolute left-0 right-0 bottom-0 z-10 flex flex-col"
+                                style={{
+                                    height: `${drawerHeight}px`,
+                                    transition: isDraggingDrawer ? 'none' : 'height 0.4s cubic-bezier(0.25, 1.0, 0.5, 1.0)',
+                                    background: '#f7f6f3',
+                                    borderRadius: '24px 24px 0 0',
+                                    boxShadow: '0 -9px 21px rgba(0,0,0,0.1), 0 -34px 38px rgba(0,0,0,0.09)',
+                                }}
+                            >
+                                {/* Grab Handle */}
+                                <div
+                                    className="flex items-center justify-center flex-shrink-0 cursor-grab active:cursor-grabbing"
+                                    style={{ height: '32px', touchAction: 'none' }}
+                                    onTouchStart={handleDrawerTouchStart}
+                                    onTouchMove={handleDrawerTouchMove}
+                                    onTouchEnd={handleDrawerTouchEnd}
+                                    onClick={handleDrawerTap}
+                                >
+                                    <div className="w-[81px] h-[4px] bg-[#eeede6] rounded-[12px]" />
+                                </div>
+
+                                {/* Result count */}
+                                <div className="px-4 pb-2 flex-shrink-0">
+                                    <p className="text-sm font-semibold text-[#222]">{mockProjects.length} properties</p>
+                                </div>
+
+                                {/* Scrollable card grid */}
+                                <div className="flex-1 overflow-y-auto overflow-x-hidden min-h-0">
+                                    <div className="p-3 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))' }}>
+                                        {currentProjects.map(project => (
+                                            <div key={project.id} className="map-list-card">
+                                                <PropertyCard
+                                                    project={project}
+                                                    onSelect={onSelectProject}
+                                                    inWatchlist={watchlist.some(w => w.id === project.id)}
+                                                    onToggleWatchlist={onToggleWatchlist}
+                                                    isHovered={selectedMapProject?.id === project.id}
+                                                    isInvestorMode={isInvestorMode}
+                                                    onAddToCompare={onAddToCompare}
+                                                    inCompareList={compareList.some(c => c.id === project.id)}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {totalPages > 1 && (
+                                        <div className="flex items-center justify-center gap-3 py-4 px-4 border-t border-warm-100 flex-shrink-0">
+                                            <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-3 py-1.5 rounded-lg border border-warm-200 text-sm text-driven-text disabled:opacity-40 hover:bg-cream-100 transition-all">Prev</button>
+                                            <span className="text-sm text-warm-500 font-medium">{currentPage} / {totalPages}</span>
+                                            <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="px-3 py-1.5 rounded-lg border border-warm-200 text-sm text-driven-text disabled:opacity-40 hover:bg-cream-100 transition-all">Next</button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* ── Advanced Filter Modal ── */}
+                            {showMobileFilterModal && (
+                                <>
+                                    {/* Backdrop */}
+                                    <div
+                                        className="absolute inset-0 z-30"
+                                        style={{ background: 'rgba(0,0,0,0.11)' }}
+                                        onClick={() => setShowMobileFilterModal(false)}
+                                    />
+
+                                    {/* Modal */}
+                                    <div
+                                        className="absolute z-40 bg-white flex flex-col"
+                                        style={{
+                                            top: '50%',
+                                            left: '50%',
+                                            transform: 'translate(-50%, -50%)',
+                                            width: 'min(364px, calc(100% - 32px))',
+                                            maxHeight: 'calc(100% - 64px)',
+                                            borderRadius: '31px',
+                                            padding: '16px',
+                                            boxShadow: '-82px 26px 34px rgba(0,0,0,0.01), -46px 15px 29px rgba(0,0,0,0.05), -21px 7px 22px rgba(0,0,0,0.09), -5px 2px 12px rgba(0,0,0,0.1)',
+                                            border: '1px solid #e4e4e5',
+                                            animation: 'filterModalIn 0.3s cubic-bezier(0.25, 1.0, 0.5, 1.0)',
+                                        }}
+                                    >
+                                        {/* Header: Tabs + Close */}
+                                        <div className="flex items-start justify-between mb-[16px] flex-shrink-0">
+                                            <div className="flex gap-[16px] items-center">
+                                                <span className="text-[16px] font-semibold text-[rgba(0,0,0,0.8)] underline">Search location</span>
+                                                <span className="text-[16px] text-[rgba(0,0,0,0.38)]">Sort</span>
+                                            </div>
+                                            <button onClick={() => setShowMobileFilterModal(false)} className="w-[24px] h-[24px] flex items-center justify-center flex-shrink-0">
+                                                <svg width="15.5" height="15.5" viewBox="0 0 15.5 15.5" fill="none">
+                                                    <path d="M15.5 1.55L13.95 0L7.75 6.2L1.55 0L0 1.55L6.2 7.75L0 13.95L1.55 15.5L7.75 9.3L13.95 15.5L15.5 13.95L9.3 7.75L15.5 1.55Z" fill="#0A0A0A" />
+                                                </svg>
+                                            </button>
+                                        </div>
+
+                                        {/* Scrollable filter content */}
+                                        <div className="flex-1 overflow-y-auto flex flex-col gap-[16px] min-h-0">
+
+                                            {/* Buy/Rent/Commercial/Projects tabs */}
+                                            <div className="bg-[#FFFBF6] border border-[#E7DCCC] rounded-[36px] p-[8px] flex gap-[4px] w-full">
+                                                {mainTabs.map(tab => (
+                                                    <button
+                                                        key={tab.id}
+                                                        onClick={() => setActiveMainTab(tab.id)}
+                                                        className="flex-1 h-[34px] rounded-[16px] flex items-center justify-center transition-all duration-200"
+                                                        style={{
+                                                            background: activeMainTab === tab.id ? '#161717' : 'transparent',
+                                                            boxShadow: activeMainTab === tab.id ? '-16px 6px 7px rgba(0,0,0,0.03), -9px 3px 6px rgba(0,0,0,0.09), -4px 1px 4px rgba(0,0,0,0.15), -1px 0px 2px rgba(0,0,0,0.17)' : 'none',
+                                                        }}
+                                                    >
+                                                        <span className="text-[14px] leading-[18px] whitespace-nowrap" style={{ color: activeMainTab === tab.id ? '#FAFAF5' : '#1C1C1A' }}>{tab.label}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
+
+                                            {/* All/Ready/Off Plan/Luxury sub-tabs */}
+                                            <div className="bg-[#FFFBF6] border border-[#E7DCCC] rounded-[36px] p-[8px] flex gap-[4px] w-full">
+                                                {subTabs.map(tab => (
+                                                    <button
+                                                        key={tab.id}
+                                                        onClick={() => setActiveSubTab(tab.id)}
+                                                        className="flex-1 min-h-[32px] rounded-[16px] flex items-center justify-center transition-all duration-200"
+                                                        style={{
+                                                            background: activeSubTab === tab.id ? '#EBEBE2' : 'transparent',
+                                                            border: activeSubTab === tab.id ? '1px solid #333331' : '1px solid transparent',
+                                                            boxShadow: activeSubTab === tab.id ? '-16px 6px 7px rgba(0,0,0,0.03), -9px 3px 6px rgba(0,0,0,0.09), -4px 1px 4px rgba(0,0,0,0.15), -1px 0px 2px rgba(0,0,0,0.17)' : 'none',
+                                                        }}
+                                                    >
+                                                        <span className="text-[14px] text-center whitespace-nowrap" style={{ fontWeight: activeSubTab === tab.id ? 600 : 400, color: activeSubTab === tab.id ? '#000000' : '#494946' }}>{tab.label}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
+
+                                            {/* Investor / Normal Mode toggle */}
+                                            <div className="bg-[#FFFBF6] border border-[#E7DCCC] rounded-[36px] p-[8px] flex gap-[4px] w-full">
+                                                <button
+                                                    onClick={() => setIsInvestorMode(true)}
+                                                    className="flex-1 min-h-[32px] rounded-[16px] flex items-center justify-center transition-all duration-200"
+                                                    style={{
+                                                        background: isInvestorMode ? '#EBEBE2' : 'transparent',
+                                                        border: isInvestorMode ? '1px solid #333331' : '1px solid transparent',
+                                                        boxShadow: isInvestorMode ? '-16px 6px 7px rgba(0,0,0,0.03), -9px 3px 6px rgba(0,0,0,0.09), -4px 1px 4px rgba(0,0,0,0.15), -1px 0px 2px rgba(0,0,0,0.17)' : 'none',
+                                                    }}
+                                                >
+                                                    <span className="text-[14px] text-center" style={{ fontWeight: isInvestorMode ? 600 : 400, color: isInvestorMode ? '#000000' : '#494946' }}>Investor Mode</span>
+                                                </button>
+                                                <button
+                                                    onClick={() => setIsInvestorMode(false)}
+                                                    className="flex-1 min-h-[32px] rounded-[16px] flex items-center justify-center transition-all duration-200"
+                                                    style={{
+                                                        background: !isInvestorMode ? '#EBEBE2' : 'transparent',
+                                                        border: !isInvestorMode ? '1px solid #333331' : '1px solid transparent',
+                                                        boxShadow: !isInvestorMode ? '-16px 6px 7px rgba(0,0,0,0.03), -9px 3px 6px rgba(0,0,0,0.09), -4px 1px 4px rgba(0,0,0,0.15), -1px 0px 2px rgba(0,0,0,0.17)' : 'none',
+                                                    }}
+                                                >
+                                                    <span className="text-[14px] text-center" style={{ fontWeight: !isInvestorMode ? 600 : 400, color: !isInvestorMode ? '#000000' : '#494946' }}>Normal Mode</span>
+                                                </button>
+                                            </div>
+
+                                            {/* Handover by dropdown pill */}
+                                            <div className="bg-[#FFFBF6] border border-[#E7DCCC] rounded-[33px] h-[50px] px-[16px] flex items-center">
+                                                <div className="flex flex-col gap-[4px]">
+                                                    <div className="flex gap-[4px] items-center">
+                                                        <svg width="16" height="16" viewBox="0 0 10 5.5" fill="none"><path d="M5 5.5L0 0H10L5 5.5Z" fill="#242424" /></svg>
+                                                        <span className="text-[12px] text-[#696765]">Handover by</span>
+                                                    </div>
+                                                    <span className="text-[14px] font-semibold text-black">{selectedHandover}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Payment Plan dropdown pill */}
+                                            <div className="bg-[#FFFBF6] border border-[#E7DCCC] rounded-[33px] h-[50px] px-[16px] flex items-center">
+                                                <div className="flex flex-col gap-[4px]">
+                                                    <div className="flex gap-[4px] items-center">
+                                                        <svg width="16" height="16" viewBox="0 0 10 5.5" fill="none"><path d="M5 5.5L0 0H10L5 5.5Z" fill="#242424" /></svg>
+                                                        <span className="text-[12px] text-[#696765]">Payment Plan</span>
+                                                    </div>
+                                                    <span className="text-[14px] font-semibold text-black">{selectedPaymentPlan}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Completion dropdown pill */}
+                                            <div className="bg-[#FFFBF6] border border-[#E7DCCC] rounded-[33px] h-[50px] px-[16px] flex items-center">
+                                                <div className="flex flex-col gap-[4px]">
+                                                    <div className="flex gap-[4px] items-center">
+                                                        <svg width="16" height="16" viewBox="0 0 10 5.5" fill="none"><path d="M5 5.5L0 0H10L5 5.5Z" fill="#242424" /></svg>
+                                                        <span className="text-[12px] text-[#696765]">Completion</span>
+                                                    </div>
+                                                    <span className="text-[14px] font-semibold text-black">{selectedCompletion}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Amenities dropdown pill */}
+                                            <div className="bg-[#FFFBF6] border border-[#E7DCCC] rounded-[33px] h-[50px] px-[16px] flex items-center">
+                                                <div className="flex gap-[4px] items-center">
+                                                    <svg width="16" height="16" viewBox="0 0 10 5.5" fill="none"><path d="M5 5.5L0 0H10L5 5.5Z" fill="#242424" /></svg>
+                                                    <span className="text-[14px] text-[#696765]">Amenities</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Price dropdown pill */}
+                                            <div className="bg-[#FFFBF6] border border-[#E7DCCC] rounded-[33px] h-[50px] px-[16px] flex items-center">
+                                                <div className="flex gap-[4px] items-center">
+                                                    <svg width="16" height="16" viewBox="0 0 10 5.5" fill="none"><path d="M5 5.5L0 0H10L5 5.5Z" fill="#242424" /></svg>
+                                                    <span className="text-[14px] text-[#696765]">Price</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Bottom: Reset + Search */}
+                                        <div className="flex flex-col gap-[18px] items-center mt-[24px] flex-shrink-0">
+                                            <button
+                                                onClick={() => { setLocationSearch(''); setActiveMainTab('buy'); setActiveSubTab('offplan'); setIsInvestorMode(false); }}
+                                                className="text-[14px] text-[#00276F] underline"
+                                            >Reset</button>
+                                            <div className="flex gap-[8px] items-center w-full">
+                                                {/* Search input inside modal */}
+                                                <div className="flex-1 bg-[#FFFBF6] border border-[#E7DCCC] rounded-[33px] h-[50px] px-[20px] flex items-center gap-[8px] min-w-0">
+                                                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }}>
+                                                        <circle cx="8" cy="8" r="6" stroke="#6C5F4C" strokeWidth="2" />
+                                                        <path d="M12.5 12.5L17 17" stroke="#6C5F4C" strokeWidth="2" strokeLinecap="round" />
+                                                    </svg>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Search location"
+                                                        value={locationSearch}
+                                                        onChange={(e) => setLocationSearch(e.target.value)}
+                                                        className="flex-1 bg-transparent outline-none text-[16px] placeholder:text-[rgba(0,0,0,0.59)] text-[rgba(0,0,0,0.8)] min-w-0"
+                                                        style={{ border: 'none' }}
+                                                    />
+                                                </div>
+                                                {/* Search button */}
+                                                <button
+                                                    onClick={() => setShowMobileFilterModal(false)}
+                                                    className="bg-black border border-[#C4AD8D] rounded-full p-[4px] hover:opacity-90 transition-opacity flex-shrink-0"
+                                                >
+                                                    <div className="bg-black rounded-full p-[11px]">
+                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                                            <circle cx="6.5" cy="6.5" r="5" stroke="white" strokeWidth="1.5" />
+                                                            <path d="M10.5 10.5L14 14" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                                                        </svg>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     )}
 
