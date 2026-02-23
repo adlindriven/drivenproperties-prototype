@@ -3137,31 +3137,6 @@
             const [openCalculator, setOpenCalculator] = React.useState('roi'); // 'roi' or 'mortgage'
             const [showAdvancedModal, setShowAdvancedModal] = React.useState(false);
 
-            // ── Dynamic sticky top for sidebar ──
-            const heroWrapperRef = React.useRef(null);
-            const [sidebarTop, setSidebarTop] = React.useState(96); // default 96px (top-24)
-            const NAV_HEIGHT = 66;
-            const SIDEBAR_GAP = 16; // 16px gap below nav or below hero bottom
-
-            React.useEffect(() => {
-                const onScroll = () => {
-                    if (!heroWrapperRef.current) return;
-                    const heroRect = heroWrapperRef.current.getBoundingClientRect();
-                    const heroBottom = heroRect.bottom;
-                    // When hero bottom is below nav+gap, sidebar should start below hero
-                    // When hero is fully scrolled out, sidebar sticks at nav+gap
-                    const minTop = NAV_HEIGHT + SIDEBAR_GAP; // 82px
-                    if (heroBottom > minTop) {
-                        setSidebarTop(heroBottom + SIDEBAR_GAP);
-                    } else {
-                        setSidebarTop(minTop);
-                    }
-                };
-                window.addEventListener('scroll', onScroll, { passive: true });
-                onScroll(); // initial calc
-                return () => window.removeEventListener('scroll', onScroll);
-            }, []);
-
             // Helper: rough number to words for display
             const numberToWords = (n) => {
                 if (n >= 1000000) return `${(n / 1000000).toFixed(2)} million`;
@@ -3251,7 +3226,7 @@
                             </div>
                         </div>
                     </div>
-                    <div ref={heroWrapperRef} className="max-w-[1400px] mx-auto px-4 md:px-6 pb-0">
+                    <div className="max-w-[1400px] mx-auto px-4 md:px-6 pb-0">
                         {/* Glass border wrapper — like search box */}
                         <div className="p-2 bg-white/15 backdrop-blur-md rounded-[2.25rem] border border-white/25 shadow-2xl">
                             <div className="bg-white rounded-[1.75rem] overflow-hidden">
@@ -4489,7 +4464,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div className="hidden lg:block space-y-4 sticky self-start overflow-y-auto pb-4 scrollbar-hide transition-all duration-150" style={{ top: `${sidebarTop}px`, maxHeight: `calc(100vh - ${sidebarTop + 24}px)` }}>
+                            <div className="hidden lg:block space-y-4 sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pb-4 scrollbar-hide">
 
                                 {/* Card 1: Price + CTAs + Agent */}
                                 <div className="bg-white rounded-2xl p-5 border border-white/30 shadow-[0_0_0_1.5px_rgba(255,255,255,0.35),0_2px_16px_rgba(0,0,0,0.07)]">
