@@ -2564,12 +2564,12 @@
                                                         </div>
                                                     </div>
 
-                                                    {/* Row 2: Sub-tabs + Dropdowns — wrap to next line if not enough space */}
-                                                    <div className="flex gap-2 items-center flex-wrap">
+                                                    {/* Row 2: Sub-tabs + Dropdowns — inline on wide screens, wrap on narrow */}
+                                                    <div className="flex gap-2 items-center flex-wrap xl:flex-nowrap">
 
-                                                        {/* Buy status sub-tabs — w-full so buttons spread evenly */}
+                                                        {/* Buy status sub-tabs — full width on narrow, inline on xl+ */}
                                                         {activeTab === 'buy' && (
-                                                            <div className="bg-[#fffbf6] border border-[#e7dccc] rounded-[36px] p-1.5 flex gap-1 w-full">
+                                                            <div className="bg-[#fffbf6] border border-[#e7dccc] rounded-[36px] p-1.5 flex gap-1 w-full xl:w-auto xl:flex-1">
                                                                 {[{ key: 'all', label: 'All' }, { key: 'ready', label: 'Ready' }, { key: 'offplan', label: 'Off Plan' }, { key: 'luxury', label: 'Luxury' }].map(({ key, label }) => (
                                                                     <button
                                                                         key={key}
@@ -2582,38 +2582,38 @@
                                                             </div>
                                                         )}
 
-                                                        {/* Rent sub-tabs — w-full */}
+                                                        {/* Rent sub-tabs */}
                                                         {activeTab === 'rent' && (
-                                                            <div className="bg-[#fffbf6] border border-[#e7dccc] rounded-[36px] p-1.5 flex gap-1 w-full">
+                                                            <div className="bg-[#fffbf6] border border-[#e7dccc] rounded-[36px] p-1.5 flex gap-1 w-full xl:w-auto xl:flex-1">
                                                                 {['Yearly', 'Monthly', 'Weekly'].map(p => (
                                                                     <button key={p} className="flex-1 min-h-[32px] py-1 rounded-[16px] text-sm text-[#494946] hover:bg-black/5 transition-all whitespace-nowrap">{p}</button>
                                                                 ))}
                                                             </div>
                                                         )}
 
-                                                        {/* Commercial sub-tabs — w-full */}
+                                                        {/* Commercial sub-tabs */}
                                                         {activeTab === 'commercial' && (
-                                                            <div className="bg-[#fffbf6] border border-[#e7dccc] rounded-[36px] p-1.5 flex gap-1 w-full">
+                                                            <div className="bg-[#fffbf6] border border-[#e7dccc] rounded-[36px] p-1.5 flex gap-1 w-full xl:w-auto xl:flex-1">
                                                                 {['Office', 'Retail', 'Warehouse'].map(p => (
                                                                     <button key={p} className="flex-1 min-h-[32px] py-1 rounded-[16px] text-sm text-[#494946] hover:bg-black/5 transition-all whitespace-nowrap">{p}</button>
                                                                 ))}
                                                             </div>
                                                         )}
 
-                                                        {/* Projects sub-tabs — w-full */}
+                                                        {/* Projects sub-tabs */}
                                                         {activeTab === 'projects' && (
-                                                            <div className="bg-[#fffbf6] border border-[#e7dccc] rounded-[36px] p-1.5 flex gap-1 w-full">
+                                                            <div className="bg-[#fffbf6] border border-[#e7dccc] rounded-[36px] p-1.5 flex gap-1 w-full xl:w-auto xl:flex-1">
                                                                 {['Off-Plan', 'Completed', 'Under Construction'].map(p => (
                                                                     <button key={p} className="flex-1 min-h-[32px] py-1 rounded-[16px] text-sm text-[#494946] hover:bg-black/5 transition-all whitespace-nowrap">{p}</button>
                                                                 ))}
                                                             </div>
                                                         )}
 
-                                                        {/* Dropdown Filters */}
+                                                        {/* Dropdown Filters — flex-1 on xl to sit inline with sub-tabs */}
                                                         {activeTab === 'buy' && buySubTab === 'offplan' ? (
-                                                            <>
-                                                                <div className="relative flex-shrink-0">
-                                                                    <button onClick={() => toggleDropdown('handover')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[130px] border-[#e7dccc]`}>
+                                                            <div className="contents xl:flex xl:flex-1 xl:gap-2 xl:items-center">
+                                                                <div className="relative flex-shrink-0 xl:flex-1">
+                                                                    <button onClick={() => toggleDropdown('handover')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[130px] xl:w-full border-[#e7dccc]`}>
                                                                         <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424] flex-shrink-0" />
                                                                         <div className="text-left">
                                                                             <p className="text-[11px] text-[#696765] leading-none font-medium">Handover by</p>
@@ -2628,8 +2628,8 @@
                                                                         </div>
                                                                     )}
                                                                 </div>
-                                                                <div className="relative flex-shrink-0">
-                                                                    <button onClick={() => toggleDropdown('paymentplan')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[140px] border-[#e7dccc]`}>
+                                                                <div className="relative flex-shrink-0 xl:flex-1">
+                                                                    <button onClick={() => toggleDropdown('paymentplan')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[140px] xl:w-full border-[#e7dccc]`}>
                                                                         <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424] flex-shrink-0" />
                                                                         <div className="text-left">
                                                                             <p className="text-[11px] text-[#696765] leading-none font-medium">Payment Plan</p>
@@ -2644,8 +2644,8 @@
                                                                         </div>
                                                                     )}
                                                                 </div>
-                                                                <div className="relative flex-shrink-0">
-                                                                    <button onClick={() => toggleDropdown('completion')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[120px] border-[#e7dccc]`}>
+                                                                <div className="relative flex-shrink-0 xl:flex-1">
+                                                                    <button onClick={() => toggleDropdown('completion')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[120px] xl:w-full border-[#e7dccc]`}>
                                                                         <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424] flex-shrink-0" />
                                                                         <div className="text-left">
                                                                             <p className="text-[11px] text-[#696765] leading-none font-medium">Completion</p>
@@ -2660,11 +2660,11 @@
                                                                         </div>
                                                                     )}
                                                                 </div>
-                                                            </>
+                                                            </div>
                                                         ) : activeTab === 'buy' ? (
-                                                            <>
-                                                                <div className="relative flex-shrink-0">
-                                                                    <button onClick={() => toggleDropdown('type')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[100px] border-[#e7dccc]`}>
+                                                            <div className="contents xl:flex xl:flex-1 xl:gap-2 xl:items-center">
+                                                                <div className="relative flex-shrink-0 xl:flex-1">
+                                                                    <button onClick={() => toggleDropdown('type')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[100px] xl:w-full border-[#e7dccc]`}>
                                                                         <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424] flex-shrink-0" />
                                                                         <div className="text-left">
                                                                             <p className="text-[11px] text-[#696765] leading-none font-medium">Type</p>
@@ -2679,8 +2679,8 @@
                                                                         </div>
                                                                     )}
                                                                 </div>
-                                                                <div className="relative flex-shrink-0">
-                                                                    <button onClick={() => toggleDropdown('beds')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[120px] border-[#e7dccc]`}>
+                                                                <div className="relative flex-shrink-0 xl:flex-1">
+                                                                    <button onClick={() => toggleDropdown('beds')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[120px] xl:w-full border-[#e7dccc]`}>
                                                                         <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424] flex-shrink-0" />
                                                                         <div className="text-left">
                                                                             <p className="text-[11px] text-[#696765] leading-none font-medium">Beds, Baths</p>
@@ -2695,8 +2695,8 @@
                                                                         </div>
                                                                     )}
                                                                 </div>
-                                                                <div className="relative flex-shrink-0">
-                                                                    <button onClick={() => toggleDropdown('price')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[95px] border-[#e7dccc]`}>
+                                                                <div className="relative flex-shrink-0 xl:flex-1">
+                                                                    <button onClick={() => toggleDropdown('price')} className={`bg-[#fffbf6] border h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[95px] xl:w-full border-[#e7dccc]`}>
                                                                         <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424] flex-shrink-0" />
                                                                         <div className="text-left">
                                                                             <p className="text-[11px] text-[#696765] leading-none font-medium">Price</p>
@@ -2711,28 +2711,34 @@
                                                                         </div>
                                                                     )}
                                                                 </div>
-                                                            </>
+                                                            </div>
                                                         ) : activeTab === 'rent' ? (
-                                                            ['Type', 'Beds, Baths', 'Price'].map(f => (
-                                                                <button key={f} className="flex-shrink-0 bg-[#fffbf6] border border-[#e7dccc] h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[100px]">
-                                                                    <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424]" />
-                                                                    <p className="text-sm text-[#696765]">{f}</p>
-                                                                </button>
-                                                            ))
+                                                            <div className="contents xl:flex xl:flex-1 xl:gap-2 xl:items-center">
+                                                                {['Type', 'Beds, Baths', 'Price'].map(f => (
+                                                                    <button key={f} className="flex-shrink-0 xl:flex-1 bg-[#fffbf6] border border-[#e7dccc] h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[100px]">
+                                                                        <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424]" />
+                                                                        <p className="text-sm text-[#696765]">{f}</p>
+                                                                    </button>
+                                                                ))}
+                                                            </div>
                                                         ) : activeTab === 'commercial' ? (
-                                                            ['Size (sqft)', 'Price'].map(f => (
-                                                                <button key={f} className="flex-shrink-0 bg-[#fffbf6] border border-[#e7dccc] h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[100px]">
-                                                                    <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424]" />
-                                                                    <p className="text-sm text-[#696765]">{f}</p>
-                                                                </button>
-                                                            ))
+                                                            <div className="contents xl:flex xl:flex-1 xl:gap-2 xl:items-center">
+                                                                {['Size (sqft)', 'Price'].map(f => (
+                                                                    <button key={f} className="flex-shrink-0 xl:flex-1 bg-[#fffbf6] border border-[#e7dccc] h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[100px]">
+                                                                        <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424]" />
+                                                                        <p className="text-sm text-[#696765]">{f}</p>
+                                                                    </button>
+                                                                ))}
+                                                            </div>
                                                         ) : (
-                                                            ['Developer', 'Location', 'Price Range'].map(f => (
-                                                                <button key={f} className="flex-shrink-0 bg-[#fffbf6] border border-[#e7dccc] h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[100px]">
-                                                                    <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424]" />
-                                                                    <p className="text-sm text-[#696765]">{f}</p>
-                                                                </button>
-                                                            ))
+                                                            <div className="contents xl:flex xl:flex-1 xl:gap-2 xl:items-center">
+                                                                {['Developer', 'Location', 'Price Range'].map(f => (
+                                                                    <button key={f} className="flex-shrink-0 xl:flex-1 bg-[#fffbf6] border border-[#e7dccc] h-[50px] rounded-[33px] flex items-center pl-3 pr-4 gap-2 hover:bg-[#f0ede8] transition-colors min-w-[100px]">
+                                                                        <Icon name="chevronDown" className="w-3.5 h-3.5 text-[#242424]" />
+                                                                        <p className="text-sm text-[#696765]">{f}</p>
+                                                                    </button>
+                                                                ))}
+                                                            </div>
                                                         )}
                                                     </div>
 
