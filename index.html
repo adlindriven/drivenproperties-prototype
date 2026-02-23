@@ -3137,6 +3137,29 @@
             const [openCalculator, setOpenCalculator] = React.useState('roi'); // 'roi' or 'mortgage'
             const [showAdvancedModal, setShowAdvancedModal] = React.useState(false);
 
+            // Refs for sidebar scroll logic
+            const sidebarRef = React.useRef(null);
+            const leftColRef = React.useRef(null);
+
+            // Sidebar scroll logic: when cursor is on left column and scrolling UP,
+            // also scroll the sidebar's internal content up. But when scrolling DOWN
+            // on the left column, don't scroll the sidebar at all.
+            React.useEffect(() => {
+                const leftCol = leftColRef.current;
+                const sidebar = sidebarRef.current;
+                if (!leftCol || !sidebar) return;
+
+                const handleWheel = (e) => {
+                    // Only propagate upward scrolls (negative deltaY) to the sidebar
+                    if (e.deltaY < 0) {
+                        sidebar.scrollTop = Math.max(0, sidebar.scrollTop + e.deltaY);
+                    }
+                };
+
+                leftCol.addEventListener('wheel', handleWheel, { passive: true });
+                return () => leftCol.removeEventListener('wheel', handleWheel);
+            }, []);
+
             // Helper: rough number to words for display
             const numberToWords = (n) => {
                 if (n >= 1000000) return `${(n / 1000000).toFixed(2)} million`;
@@ -3438,7 +3461,7 @@
                     <div className="max-w-[1400px] mx-auto px-4 md:px-6 py-6">
                         <div className="grid lg:grid-cols-3 gap-8 items-start min-w-0">
                             {/* Main Content */}
-                            <div className="lg:col-span-2 space-y-6 min-w-0 overflow-hidden">
+                            <div ref={leftColRef} className="lg:col-span-2 space-y-6 min-w-0 overflow-hidden">
                                 {/* Key Metrics + About Property */}
                                 <div className="bg-white rounded-2xl border border-white/30 shadow-[0_0_0_1.5px_rgba(255,255,255,0.35),0_2px_16px_rgba(0,0,0,0.07)] overflow-hidden min-w-0">
 
@@ -4464,7 +4487,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div className="hidden lg:block space-y-4 sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pb-4 scrollbar-hide">
+                            <div ref={sidebarRef} className="hidden lg:block space-y-4 sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pb-4 scrollbar-hide">
 
                                 {/* Card 1: Price + CTAs + Agent */}
                                 <div className="bg-white rounded-2xl p-5 border border-white/30 shadow-[0_0_0_1.5px_rgba(255,255,255,0.35),0_2px_16px_rgba(0,0,0,0.07)]">
