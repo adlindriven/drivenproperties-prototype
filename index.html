@@ -3134,7 +3134,7 @@
             const [showEmailForm, setShowEmailForm] = React.useState(false);
             const [email, setEmail] = React.useState('');
             const [phone, setPhone] = React.useState('');
-            const [openCalculator, setOpenCalculator] = React.useState('mortgage'); // 'mortgage' or 'roi'
+            const [openCalculator, setOpenCalculator] = React.useState('roi'); // 'roi' or 'mortgage'
             const [showAdvancedModal, setShowAdvancedModal] = React.useState(false);
 
             // Helper: rough number to words for display
@@ -3611,7 +3611,7 @@
                                     <div>
                                         <h3 className="text-lg font-bold text-driven-text mb-4">Check the numbers</h3>
                                         <div className="bg-cream-100 p-1 rounded-full flex mb-5">
-                                            {['mortgage', 'roi', 'advanced'].map(tab => (
+                                            {['roi', 'mortgage', 'advanced'].map(tab => (
                                                 <button
                                                     key={tab}
                                                     onClick={() => tab === 'advanced' ? setShowAdvancedModal(true) : setOpenCalculator(tab)}
@@ -3625,7 +3625,7 @@
                                                             <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
                                                         </svg>
                                                     )}
-                                                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                                    {tab === 'roi' ? 'ROI' : tab.charAt(0).toUpperCase() + tab.slice(1)}
                                                 </button>
                                             ))}
                                         </div>
@@ -4519,7 +4519,7 @@
 
                                         {/* Tab Switcher - Pill Style */}
                                         <div className="bg-cream-100 p-1 rounded-full flex mb-5">
-                                            {['mortgage', 'roi', 'advanced'].map(tab => (
+                                            {['roi', 'mortgage', 'advanced'].map(tab => (
                                                 <button
                                                     key={tab}
                                                     onClick={() => tab === 'advanced' ? setShowAdvancedModal(true) : setOpenCalculator(tab)}
@@ -4533,7 +4533,7 @@
                                                             <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
                                                         </svg>
                                                     )}
-                                                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                                    {tab === 'roi' ? 'ROI' : tab.charAt(0).toUpperCase() + tab.slice(1)}
                                                 </button>
                                             ))}
                                         </div>
