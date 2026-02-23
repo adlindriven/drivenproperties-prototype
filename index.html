@@ -3203,12 +3203,12 @@
             ];
 
             return (
-                <div className="min-h-screen bg-cream-50">
+                <div className="min-h-screen bg-cream-50" style={{ overflowX: 'hidden' }}>
 
                     {/* Breadcrumb + Currency */}
                     <div className="bg-cream-50 px-6 py-3 max-w-[1400px] mx-auto">
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-sm text-warm-500">
+                            <div className="flex items-center gap-2 text-sm text-warm-500 min-w-0 overflow-hidden">
                                 <button onClick={onBack} className="flex items-center gap-1 hover:text-driven-text transition-colors">
                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5"><path d="M3 12h18M3 6h18M3 18h18" /></svg>
                                     Home
@@ -3401,7 +3401,7 @@
                                             </p>
                                         </div>
                                         {/* Right: action buttons */}
-                                        <div className="flex items-center gap-2 flex-shrink-0">
+                                        <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
                                             <button onClick={() => { setShowVideoPlayer(true); }} className="flex items-center gap-2 border border-warm-300 bg-white rounded-full px-4 py-2.5 text-sm font-medium text-driven-text hover:border-warm-400 hover:bg-cream-50 transition-all shadow-sm">
                                                 <Icon name="play" className="w-4 h-4" /> Watch Video
                                             </button>
